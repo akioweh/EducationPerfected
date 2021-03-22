@@ -6,7 +6,6 @@
 // @author       KEN_2000
 // @match        *://www.educationperfect.com/app/*
 // @grant        none
-// @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js
 // ==/UserScript==
 
 (function() {
@@ -46,36 +45,30 @@
     };
 
     function nextQuestion() {
-        if (TOGGLE = true) {setTimeout(answerQuestion, 500)};
+        if (TOGGLE = true) {setTimeout(answerQuestion, 100)};
     };
 
     function answerQuestion() {
         try {
-            var question = document.getElementById('question-text').childNodes[0].innerText;
+            var question = document.querySelectorAll('#question-text')[0].innerText;
 
             if (question != undefined) {
-                console.log('QUESTION: ' + question);
+                question = question.split(', ').slice(-1);
                 var answer = String(fullDict[question]);
 
-                if (answer != undefined && answer != 'undefined') {
-                    console.log('ANSWER: ' + answer);
-                    var answerBox = document.querySelectorAll('#answer-text')[1];
-                    // Find out how to input answer?!?!?! It apparently somehow always resets the textbox value if you do x.value = asdf
-                    answerBox.value = answer;
-                    document.querySelector('#submit-button').click();
-                    nextQuestion();
+                if (answer != undefined) {
+                    navigator.clipboard.writeText(answer)
                 } else {
                     console.log('No Answer Found');
-                    nextQuestion();
                 };
-
             } else {
                 console.log('No Question Found');
-                nextQuestion();
             };
+            nextQuestion();
         } catch {
-            TOGGLE = false
-            alert('Auto-Answer Stopped')
+            TOGGLE = false;
+            console.log('Error');
+            alert('Auto-Answer Stopped');
         };
     };
 
@@ -100,4 +93,3 @@
         };
     });
 })();
-
