@@ -2,6 +2,8 @@
 // @name         Education Perfected (Auto-Answer) DEV
 // @namespace    http://tampermonkey.net/
 // @version      0.2
+// @updateURL    https://github.com/KEN-2000l/EducationPerfected/blob/main/script.js
+// @downloadURL  https://github.com/KEN-2000l/EducationPerfected/blob/main/script.js
 // @description  Shitty script to auto-answer Education Perfect Tasks (and learn basic js)
 // @author       KEN_2000
 // @match        *://www.educationperfect.com/app/*
