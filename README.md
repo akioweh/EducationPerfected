@@ -2,7 +2,7 @@
 Very bad JS userscript to automatically answer Education Perfect language questions.
 
 
-Load using the TamperMonkey browser extension or similar
+Load using the TamperMonkey browser extension or similar (Paste script.js in there)
 
 Alt + R refreshes question/answer list (When on the page with the word list)
 Alt + A starts the non-funcitonal auto answer (When on the question page)
