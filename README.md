@@ -1,10 +1,14 @@
 # EducationPerfected
 Very bad JS userscript to automatically answer Education Perfect language questions.
+Works for word-word tasks and dash as well.
 
 
 Load using the TamperMonkey browser extension or similar (Paste script.js in there)
 
+
+# Hotkeys
 Alt + R refreshes question/answer list (When on the page with the word list)
+
 Alt + A starts the non-funcitonal auto answer (When on the question page)
 
 
