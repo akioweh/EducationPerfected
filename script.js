@@ -38,8 +38,8 @@
     function mergeLists(l1, l2) {
         var mergedWords = {};
         for (let i = 0; i < l1.length; i++) {
-            var w1 = l1[i].split('; ').slice(-1);
-            var w2 = l2[i].split('; ').slice(-1);
+            var w1 = l1[i].split('; ').slice(0, 1);
+            var w2 = l2[i].split('; ').slice(0, 1);
             mergedWords[w2] = w1;
             mergedWords[w1] = w2;
         };
@@ -55,7 +55,7 @@
             var question = document.querySelectorAll('#question-text')[0].innerText;
 
             if (question != undefined) {
-                question = question.split(', ').slice(-1);
+                question = question.split(', ').slice(0, 1);
                 var answer = String(fullDict[question]);
 
                 if (answer != undefined) {
@@ -70,30 +70,30 @@
         } catch {
             TOGGLE = false;
             console.log('Error');
-            alert('Auto-Answer Stopped');
+        alert('Auto-Answer Stopped');
+    };
+};
+
+ document.addEventListener("keydown", (event) => {
+    if (event.altKey && event.keyCode === 82) {
+        fullDict = mergeLists(wordlistBase(), wordlistTarget());
+        console.log(fullDict);
+        alert('Word List Refreshed');
+    };
+});
+
+document.addEventListener("keydown", (event) => {
+    if (event.altKey && event.keyCode === 65) {
+        if (TOGGLE === false) {
+            alert('Starting Auto-Answer');
+            TOGGLE = true;
+            answerQuestion();
+        } else if (TOGGLE === true) {
+            alert('Stopping Auto-Answer');
+            TOGGLE = false;
         };
     };
-
-    document.addEventListener("keydown", (event) => {
-        if (event.altKey && event.keyCode === 82) {
-            fullDict = mergeLists(wordlistBase(), wordlistTarget());
-            console.log(fullDict);
-            alert('Word List Refreshed');
-        };
-    });
-
-    document.addEventListener("keydown", (event) => {
-        if (event.altKey && event.keyCode === 65) {
-            if (TOGGLE === false) {
-                alert('Starting Auto-Answer');
-                TOGGLE = true;
-                answerQuestion();
-            } else if (TOGGLE === true) {
-                alert('Stopping Auto-Answer');
-                TOGGLE = false;
-            };
-        };
-    });
+});
 })();
 
 //End
