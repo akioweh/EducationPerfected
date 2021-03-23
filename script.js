@@ -38,8 +38,8 @@
     function mergeLists(l1, l2) {
         var mergedWords = {};
         for (let i = 0; i < l1.length; i++) {
-            var w1 = l1[i].split('; ').slice(0, 1);
-            var w2 = l2[i].split('; ').slice(0, 1);
+            var w1 = l1[i].replace(/ *\([^)]*\) */g, "").split('; ').slice(0, 1);
+            var w2 = l2[i].replace(/ *\([^)]*\) */g, "").split('; ').slice(0, 1);
             mergedWords[w2] = w1;
             mergedWords[w1] = w2;
         };
@@ -55,14 +55,11 @@
             var question = document.querySelectorAll('#question-text')[0].innerText;
 
             if (question != undefined) {
-                question = question.split(', ').slice(0, 1);
+                question = question.replace(/ *\([^)]*\) */g, "").split(', ').slice(0, 1);
                 var answer = String(fullDict[question]);
 
-                if (answer != undefined) {
-                    navigator.clipboard.writeText(answer)
-                } else {
-                    console.log('No Answer Found');
-                };
+                navigator.clipboard.writeText(answer);
+
             } else {
                 console.log('No Question Found');
             };
