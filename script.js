@@ -4,7 +4,7 @@
 // @version      0.2.3
 // @updateURL    https://raw.githubusercontent.com/KEN-2000l/EducationPerfected/main/script.js
 // @downloadURL  https://raw.githubusercontent.com/KEN-2000l/EducationPerfected/main/script.js
-// @description  Shitty script to auto-answer Education Perfect Tasks (and learn basic js)
+// @description  Basic Script to auto-answer Education Perfect Tasks (and learn basic js)
 // @author       KEN_2000
 // @match        *://www.educationperfect.com/app/*
 // @grant        none
@@ -13,7 +13,7 @@
 (function() {
     'use strict';
     var TOGGLE = false;
-    var LOOP, fullDict;
+    var fullDict;
 
     console.log('Education Perfected by KEN Loading');
 
@@ -47,7 +47,9 @@
     };
 
     function nextQuestion() {
-        if (TOGGLE = true) {setTimeout(answerQuestion, 100)};
+        if (TOGGLE = true) {
+            setTimeout(answerQuestion, 100);
+        };
     };
 
     function answerQuestion() {
@@ -67,30 +69,30 @@
         } catch {
             TOGGLE = false;
             console.log('Error');
-        alert('Auto-Answer Stopped');
-    };
-};
-
- document.addEventListener("keydown", (event) => {
-    if (event.altKey && event.keyCode === 82) {
-        fullDict = mergeLists(wordlistBase(), wordlistTarget());
-        console.log(fullDict);
-        alert('Word List Refreshed');
-    };
-});
-
-document.addEventListener("keydown", (event) => {
-    if (event.altKey && event.keyCode === 65) {
-        if (TOGGLE === false) {
-            alert('Starting Auto-Answer');
-            TOGGLE = true;
-            answerQuestion();
-        } else if (TOGGLE === true) {
-            alert('Stopping Auto-Answer');
-            TOGGLE = false;
+            alert('Auto-Answer Stopped');
         };
     };
-});
+
+    document.addEventListener("keydown", (event) => {
+        if (event.altKey && event.keyCode === 82) {
+            fullDict = mergeLists(wordlistBase(), wordlistTarget());
+            console.log(fullDict);
+            alert('Word List Refreshed');
+        };
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.altKey && event.keyCode === 65) {
+            if (TOGGLE === false) {
+                alert('Starting Auto-Answer');
+                TOGGLE = true;
+                answerQuestion();
+            } else if (TOGGLE === true) {
+                alert('Stopping Auto-Answer');
+                TOGGLE = false;
+            };
+        };
+    });
 })();
 
 //End
