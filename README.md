@@ -15,3 +15,5 @@ Edit by Garv:
 Alt + R refreshes question/answer list (When on the page with the word list)  
 Alt + A starts the non-funcitonal auto answer (When on the question page)
 Alt + S answers the questions at a one second interval each (When on the question page)
+
+### Note: doesn't work on Safari
