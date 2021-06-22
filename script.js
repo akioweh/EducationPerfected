@@ -91,11 +91,11 @@
     document.addEventListener("keydown", (event) => {
         if (event.altKey && event.keyCode === 65) {
             if (TOGGLE === false) {
-                alert('Starting Auto-Answer');
+                alert('Starting Semi-Manual Answer');
                 TOGGLE = true;
                 answerQuestion();
             } else if (TOGGLE === true) {
-                alert('Stopping Auto-Answer');
+                alert('Stopping Semi-Manual Answer');
                 TOGGLE = false;
             }
         }
@@ -104,12 +104,12 @@
     document.addEventListener("keydown", (event) => {
         if (event.altKey && event.keyCode === 83) {
             if (TOGGLE === false) {
-                console.log('Starting Auto-Answer (fully automated)');
+                alert('Starting Auto-Answer');
                 TOGGLE = true;
                 globalTime = prompt("How fast would you like to answer the questions (in milliseconds)")
                 doAnswers();
             } else if (TOGGLE === true) {
-                alert('Stopping Auto-Answer (fully automated)');
+                alert('Stopping Auto-Answer');
                 TOGGLE = false;
             }
         }
