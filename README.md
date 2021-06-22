@@ -1,15 +1,14 @@
 # EducationPerfected
-Very bad JS userscript to automatically answer Education Perfect language questions.  
+JS script to automatically answer Education Perfect language questions.  
 Works for word-word tasks and dash as well.  
 
 Load by copy pasting the contents of the script.js file into your browser's inspect mode console (for example ctrl-shift-i on chrome)
 
+## Semi-Manual Answer
+*By using Alt + A, you the correct answer is auto-copied to your clipboard so that it can be pasted into the answer box (assuming you've refreshed the word list to include them all)*
 
-*Currently I am unable to implenment an effective way to automatically enter the answer into the text field and click submit...  
-So, instead it is auto-copied to clipboard :P... Ctrl+V should give the correct answer assuming you have refreshed the world list everytime the webpage reloads. (Unless you press it too fast that it hasn't worked out the answer yet and you paste the answer of the previous question)* 
-
-Edit by Garv:
-*I know a way to auto-submit so I'll add that fucntionality, but just so I don't break anything, I'm leaving the original hotkeys in.*
+## Auto Answer
+*By using Alt + S, you can automatically answer the questions and submit too (how wonderful!) It should ask you for a time interval at which it answers the questions (if you make this too low then it will submit before it has the chance to answer, and will subsequently fail), after which it will just answer through them until you either stop it again (Alt + S) or the list finishes.
 
 ### Hotkeys
 Alt + R refreshes question/answer list (When on the page with the word list)  
@@ -17,3 +16,7 @@ Alt + A starts the non-funcitonal auto answer (When on the question page)
 Alt + S answers the questions at a one second interval each (When on the question page)
 
 **Note: doesn't work on Safari**
+
+To Do:
+- [ ] Create a salter (makes it so the interval between answering the questions isn't consistent)
+- [ ] Add Safari compatibility
