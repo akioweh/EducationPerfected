@@ -17,6 +17,6 @@ Alt + S answers the questions at a one second interval each (When on the questio
 
 **Note: doesn't work on Safari**
 
-###To Do:
+### To Do:
 - [ ] Create a salter (makes it so the interval between answering the questions isn't consistent)
 - [ ] Add Safari compatibility
