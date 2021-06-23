@@ -27,8 +27,10 @@
     function mergeLists(l1, l2) {
         const mergedWords = {};
         for (let i = 0; i < l1.length; i++) {
-            const w1 = l1[i].replace(/ *\([^)]*\) */g, "").split('; ').slice(0, 1);
-            const w2 = l2[i].replace(/ *\([^)]*\) */g, "").split('; ').slice(0, 1);
+            let w1 = l1[i].replace(/ *\([^)]*\) */g, "").split('; ').slice(0, 1);
+            w1 = w1[0].replace(/ *\([^)]*\) */g, "").split(', ').slice(0, 1);
+            let w2 = l2[i].replace(/ *\([^)]*\) */g, "").split('; ').slice(0, 1);
+            w2 = w2[0].replace(/ *\([^)]*\) */g, "").split(', ').slice(0, 1);
             mergedWords[w2] = w1;
             mergedWords[w1] = w2;
         }
