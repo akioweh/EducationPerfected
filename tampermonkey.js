@@ -14,16 +14,16 @@
     'use strict';
     let TOGGLE = false;
     let fullDict;
-    const loopInterval = 100;
+    let loopInterval = 100;
 
     console.log('Education Perfected by Garv and KEN Loading');
 
     function wordList(className) {
         const elements = document.getElementsByClassName(className);
-        let words = []
+        let words = [];
         for (let i = 0; i < elements.length; i++) {
-            let word = String(elements[i].innerText.replace(/ *\([^)]*\) */g, "").split('; ').slice(0, 1))
-            word = String(word.split(', ').slice(0, 1))
+            let word = String(elements[i].innerText.replace(/ *\([^)]*\) */g, "").split('; ').slice(0, 1));
+            word = String(word.split(', ').slice(0, 1));
             words.push(word);
         }
         return words;
@@ -38,19 +38,30 @@
         return merged;
     }
 
-    function findAnswerLoop() {
+    function copyAnswer(answer) {
+        navigator.clipboard.writeText(answer);
+    }
+
+    function submitAnswer(answer) {
+        document.getElementById("explanation-button").click();
+        document.getElementsByTagName('input')[0].value = answer;
+    }
+
+    function answerLoop(answerFunc) {
         try {
-            let question = document.querySelectorAll('#question-text')[0].innerText
+            let question = document.querySelectorAll('#question-text')[0].innerText;
 
             if (question != undefined) {
-                question = question.replace(/ *\([^)]*\) */g, "").split(', ').slice(0, 1);
+                question = question.replace(/ *\([^)]*\) */g, '').split(', ').slice(0, 1);
                 let answer = fullDict[question];
-                navigator.clipboard.writeText(answer);
+
+                answerFunc(answer)
+
             } else {
                 console.log('No Question Found');
             }
             if (TOGGLE === true) {
-                setTimeout(findAnswerLoop, loopInterval)
+                setTimeout(function(){answerLoop(answerFunc)}, loopInterval);
             }
         } catch {
             TOGGLE = false;
@@ -72,11 +83,25 @@
             if (TOGGLE === false) {
                 alert('Starting Semi-Auto-Answer');
                 TOGGLE = true;
-                findAnswerLoop();
+                answerLoop(copyAnswer);
             } else if (TOGGLE === true) {
                 alert('Stopping Semi-Auto-Answer');
                 TOGGLE = false;
-            };
-        };
+            }
+        }
     });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.altKey && event.keyCode === 83) {
+            if (TOGGLE === false) {
+                alert('Starting Fully-Auto-Answer');
+                TOGGLE = true;
+                answerLoop(submitAnswer);
+            } else if (TOGGLE === true) {
+                alert('Stopping Fully-Auto-Answer');
+                TOGGLE = false;
+            }
+        }
+    });
+
 })();
