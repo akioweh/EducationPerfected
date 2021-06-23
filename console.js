@@ -46,10 +46,8 @@
     let doAnswers = () => {
         if (TOGGLE === true) {
             if (document.querySelector("#question-field") != null) {
-                setTimeout(function(){
                     fullDict[document.querySelector("#question-field").innerText.replace(/ *\([^)]*\) */g, "").split(", ").slice(0, 1)] = [document.querySelector("#correct-answer-field").innerText];
-                    setTimeout(function(){ document.querySelector("#continue-button").click(); }, 1000);
-                    }, 1500);
+                    setTimeout(function(){ document.querySelector("#continue-button").click(); }, 500);
             }
 
             let question = document.querySelectorAll("#question-text")[0].innerText;
