@@ -2,7 +2,7 @@
 JS script to automatically answer Education Perfect language questions.  
 Works for word-word tasks and dash as well.  
 
-Load by copy pasting the contents of the script.js file into your browser's inspect mode console (for example ctrl-shift-i on chrome)
+Load by copy pasting the contents of the console.js file into your browser's inspect mode console (for example ctrl-shift-i on chrome)
 
 ## Semi-Manual Answer
 *By using Alt + A, you the correct answer is auto-copied to your clipboard so that it can be pasted into the answer box (assuming you've refreshed the word list to include them all)*
