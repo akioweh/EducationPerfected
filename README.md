@@ -7,7 +7,8 @@ Works for word-word tasks and dash as well.
 __There are two versions of this script with the same functionality__:
  - **Plain script**; `console.js` - Load by copy pasting the contents of the `script.js` file into your browser's inspect mode console (for example ctrl-shift-i on chrome)  
 
- - **Tampermonkey browser extension script**; `tampermonkey.js` - Tampermonkey is a browser extension available for Edge, Chrome, etc. It automatically loads the script on the Education Perfect website so you will not have to open the console ans paste each time. Install by copy pasting the conctents  of `tampermonkey.js` file into a new script in the extension's dashboard, and press `ctrl/cmd + s` to save. After it is saved it should automatically load on the website, and the hotkeys should work.  
+ - **Tampermonkey browser extension script**; `tampermonkey.js` - Tampermonkey is a browser extension available for Edge, Chrome, etc. It automatically loads the script on the Education Perfect website so you will not have to open the console ans paste each time. Install by copy pasting the conctents  of `tampermonkey.js` file into a new script file (delete any template code in there) in the extension's dashboard, and press `ctrl/cmd + s` to save. After it is saved it should automatically load on the website, and the hotkeys should work.  
+*Link to Tampermonkey Extension: https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo*
 
 ### Load Word/Answer List (`Alt + R`)
 Before each task, Education Perfect provides a list of words and corresponding translations. This script utilizes the information from that screen to learn the answers for each question.  
