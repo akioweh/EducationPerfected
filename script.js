@@ -109,7 +109,7 @@
     document.addEventListener("keydown", (event) => {
         if (event.altKey && event.keyCode === 83) {
             if (TOGGLE === false) {
-                loopInterval = prompt("How fast would you like to answer the questions (in milliseconds)")
+                loopInterval = parseInt(prompt("How fast would you like to answer the questions (in milliseconds)"))
                 alert("Starting Fully-Auto-Answer");
                 TOGGLE = true;
                 answerLoop(submitAnswer);
