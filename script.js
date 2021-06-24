@@ -57,7 +57,7 @@
             setTimeout(function(){ fullDict[cutString(document.querySelector("#question-field").innerText)] = document.querySelector("#correct-answer-field").innerText; }, 1500);
             setTimeout(function(){ document.querySelector("#continue-button").click(); }, 500);
         } else {
-            document.getElementById("#submit-button").click();
+            document.getElementsByTagName('button')[7].click();
             document.getElementsByTagName("input")[0].value = answer;
         }
     }
