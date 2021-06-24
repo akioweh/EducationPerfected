@@ -46,7 +46,7 @@
 
     function copyAnswer(answer) {
         if (document.querySelector("#question-field") != null) {
-            setTimeout(function(){ fullDict[cutString(document.querySelector("#question-field").innerText)] = document.querySelector("#correct-answer-field").innerText; }, 1500);
+            setTimeout(function(){ fullDict[cutString(document.querySelector("#question-field").innerText)] = document.querySelector("#correct-answer-field").innerText.split(" | ")[0]; }, 1500);
         } else {
             navigator.clipboard.writeText(answer);
         }
@@ -54,7 +54,7 @@
 
     function submitAnswer(answer) {
         if (document.querySelector("#question-field") != null) {
-            setTimeout(function(){ fullDict[cutString(document.querySelector("#question-field").innerText)] = document.querySelector("#correct-answer-field").innerText; }, 1500);
+            setTimeout(function(){ fullDict[cutString(document.querySelector("#question-field").innerText)] = document.querySelector("#correct-answer-field").innerText.split(" | ")[0]; }, 1500);
             setTimeout(function(){ document.querySelector("#continue-button").click(); }, 500);
         } else {
             document.getElementsByTagName('button')[7].click();
