@@ -38,9 +38,15 @@
         return merged;
     }
 
+    function cutString(string) {
+        string = String(string.replace(/ *\([^)]*\) */g, "").split("; ").slice(0, 1));
+        string = String(string.split(', ').slice(0, 1));
+        return string
+    }
+
     function copyAnswer(answer) {
         if (document.querySelector("#question-field") != null) {
-            fullDict[document.querySelector("#question-field").innerText.replace(/ *\([^)]*\) */g, "").split(", ").slice(0, 1)] = document.querySelector("#correct-answer-field").innerText;
+            fullDict[cutString(document.querySelector("#question-field").innerText)] = document.querySelector("#correct-answer-field").innerText;
         } else {
             navigator.clipboard.writeText(answer);
         }
@@ -48,7 +54,7 @@
 
     function submitAnswer(answer) {
         if (document.querySelector("#question-field") != null) {
-            fullDict[document.querySelector("#question-field").innerText.replace(/ *\([^)]*\) */g, "").split(", ").slice(0, 1)] = document.querySelector("#correct-answer-field").innerText;
+            fullDict[cutString(document.querySelector("#question-field").innerText)] = document.querySelector("#correct-answer-field").innerText;
             setTimeout(function(){ document.querySelector("#continue-button").click(); }, 500);
         } else {
             document.getElementById("explanation-button").click();
