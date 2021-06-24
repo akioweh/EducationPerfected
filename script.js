@@ -78,9 +78,10 @@
             if (TOGGLE === true) {
                 setTimeout(function(){answerLoop(answerFunc)}, loopInterval);
             }
-        } catch {
+        } catch (err) {
             TOGGLE = false;
-            console.log("An Error has occured.");
+            console.log("An Error has occurred.");
+            console.log(err);
             alert("Error, Auto-Answer Stopped.");
         }
     }
