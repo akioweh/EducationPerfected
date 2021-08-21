@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Education Perfected (Auto-Answer)
-// @namespace    http://tampermonkey.net/
+// @namespace    mailto:gshah.6110@gmail.com
 // @version      0.4.0
 // @updateURL    https://raw.githubusercontent.com/KEN-2000l/EducationPerfected/main/script.js
 // @downloadURL  https://raw.githubusercontent.com/KEN-2000l/EducationPerfected/main/script.js
