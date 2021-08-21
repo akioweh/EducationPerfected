@@ -26,9 +26,6 @@ Alt + R refreshes question/answer list (When on the page with the word list)
 Alt + A starts the clipboard auto answer (When on the question page)  
 Alt + S answers the questions at a one-second interval each (When on the question page)  
 
-**Note: does not work on Safari**
-
 ## To Do:  
 - [X] Make the program learn from its mistakes
 - [ ] Create a salter (makes it so the interval between answering the questions isn't consistent)  
-- [ ] Add Safari compatibility  
