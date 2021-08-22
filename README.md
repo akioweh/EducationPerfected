@@ -5,7 +5,7 @@ Works for word-word tasks and dash as well.
 ## Usage  
 ### Loading/installing the script  
 __There are two methods of loading this script with the same functionality__:
- - **Plain script**: Load by copying and pasting the contents of the `script.js` file into your browser's inspect mode console (for example ctrl-shift-i on chrome). As this method is manual, you'll have to repeat this everytime you go to EP.  
+ - **Plain script**: Load by copying and pasting the contents of the `script.js` file into your browser's inspect mode console (for example Ctrl-Shift-I on chrome). As this method is manual, you'll have to repeat this everytime you go to EP.  
 
  - **Browser Extension**: 
    - Tampermonkey is a browser extension available for Edge, Chrome, etc. It automatically loads the script on the Education Perfect website, so you won't have to open the console and paste each time. Install by copying and pasting the contents of the `script.js` file into a new script file (delete any template code in there) in the extension's dashboard, and press `Ctrl/Cmd + S` to save. After it's saved, it should automatically load on the website, and the hotkeys should work.  
