@@ -10,7 +10,10 @@ __There are two methods of loading this script with the same functionality__:
  - **Browser Extension**: 
    - Tampermonkey is a browser extension available for Edge, Chrome, etc. It automatically loads the script on the Education Perfect website, so you won't have to open the console and paste each time. Install by copying and pasting the contents of the `script.js` file into a new script file (delete any template code in there) in the extension's dashboard, and press `ctrl/cmd + s` to save. After it's saved, it should automatically load on the website, and the hotkeys should work.  
    - Although Tampermonkey can be used on Safari, it costs money, so instead you can use an open source alternative called Userscripts. It works in almost the same way as described above.
-<br>*Links to Extensions:* [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo) [Userscripts](https://itunes.apple.com/us/app/userscripts/id1463298887)
+
+<br>*Links to Extensions:* 
+- [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo) 
+- [Userscripts](https://itunes.apple.com/us/app/userscripts/id1463298887)
 
 ### Load Word/Answer List (`Alt + R`)
 Before each task, Education Perfect provides a list of words and corresponding translations. This script utilizes the information from that screen to learn the answers for each question.  
