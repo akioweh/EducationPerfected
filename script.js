@@ -12,9 +12,11 @@
 
 (function() {
     "use strict";
-    let TOGGLE = false;
+    let semiTOGGLE = false;
+    let autoTOGGLE = false;
     let fullDict;
     let loopInterval = 100;
+    let answerSub = ""
 
     console.log("Education Perfected by Garv and KEN Loading");
 
@@ -44,13 +46,7 @@
         return string
     }
 
-    function copyAnswer(answer) {
-        if (document.querySelector("#question-field") != null) {
-            setTimeout(function(){ fullDict[cutString(document.querySelector("#question-field").innerText)] = document.querySelector("#correct-answer-field").innerText.split(" | ")[0]; }, 1500);
-        } else {
-            navigator.clipboard.writeText(answer);
-        }
-    }
+    function copyAnswer(answer) {}
 
     function submitAnswer(answer) {
         if (document.querySelector("#question-field") != null) {
@@ -68,18 +64,19 @@
 
             if (question !== undefined) {
                 question = question.replace(/ *\([^)]*\) */g, "").split(", ").slice(0, 1);
-                let answer = fullDict[question];
+                answerSub = fullDict[question];
 
-                answerFunc(answer)
+                answerFunc(answerSub)
 
             } else {
                 console.log("No Question Found");
             }
-            if (TOGGLE === true) {
+            if ((semiTOGGLE === true) || (autoTOGGLE === true)) {
                 setTimeout(function(){answerLoop(answerFunc)}, loopInterval);
             }
         } catch (err) {
-            TOGGLE = false;
+            semiTOGGLE = false;
+            autoTOGGLE = false;
             console.log("An Error has occurred.");
             console.log(err);
             alert("Error, Auto-Answer Stopped.");
@@ -96,27 +93,35 @@
 
     document.addEventListener("keydown", (event) => {
         if (event.altKey && event.keyCode === 65) {
-            if (TOGGLE === false) {
+            if (semiTOGGLE === false) {
                 alert("Starting Semi-Auto-Answer");
-                TOGGLE = true;
+                semiTOGGLE = true;
                 answerLoop(copyAnswer);
-            } else if (TOGGLE === true) {
+            } else if (semiTOGGLE === true) {
                 alert("Stopping Semi-Auto-Answer");
-                TOGGLE = false;
+                semiTOGGLE = false;
             }
         }
     });
 
     document.addEventListener("keydown", (event) => {
+        if ((event.metaKey && semiTOGGLE === true) || (event.ctrlKey && semiTOGGLE === true)) {
+            navigator.clipboard.writeText(answerSub).then(function(arr) {}, function(arr) {
+                console.log(`Failed to Copy Answer: ${arr}`)
+            });
+        }
+    });
+
+    document.addEventListener("keydown", (event) => {
         if (event.altKey && event.keyCode === 83) {
-            if (TOGGLE === false) {
+            if (autoTOGGLE === false) {
                 loopInterval = parseInt(prompt("How fast would you like to answer the questions (in milliseconds)"))
                 alert("Starting Fully-Auto-Answer");
-                TOGGLE = true;
+                autoTOGGLE = true;
                 answerLoop(submitAnswer);
-            } else if (TOGGLE === true) {
+            } else if (autoTOGGLE === true) {
                 alert("Stopping Fully-Auto-Answer");
-                TOGGLE = false;
+                autoTOGGLE = false;
             }
         }
     });
