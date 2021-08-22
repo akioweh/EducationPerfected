@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Education Perfected (Auto-Answer)
 // @namespace    mailto:gshah.6110@gmail.com
-// @version      0.5.1
+// @version      0.5.2
 // @updateURL    https://raw.githubusercontent.com/KEN-2000l/EducationPerfected/main/script.js
 // @downloadURL  https://raw.githubusercontent.com/KEN-2000l/EducationPerfected/main/script.js
 // @description  Basic Script to auto-answer Education Perfect Tasks
@@ -77,8 +77,7 @@
             let question = document.querySelectorAll("#question-text")[0].innerText;
 
             if (question !== undefined) {
-                question = question.replace(/ *\([^)]*\) */g, "").split(", ").slice(0, 1);
-                answerSub = fullDict[question];
+                answerSub = fullDict[cutString(question)];
 
                 if (autoTOGGLE === true) {
                     // If we are in fully-automatic, the script automatically submits the answer
