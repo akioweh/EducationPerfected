@@ -62,9 +62,11 @@
     // Submits the answer
     function submitAnswer(answer) {
         if (document.querySelector("#question-field") != null) {
+            // if the answer was wrong, it grabs the correct answer and changed fullDict as to learn from its mistake
             setTimeout(function(){ fullDict[cutString(document.querySelector("#question-field").innerText)] = document.querySelector("#correct-answer-field").innerText.split(" | ")[0]; }, 1500);
             setTimeout(function(){ document.querySelector("#continue-button").click(); }, 2000);
         } else {
+            // if not, it clicks the submit button and puts the answer into the input box
             document.getElementsByTagName('button')[7].click();
             document.getElementsByTagName("input")[0].value = answer;
         }
