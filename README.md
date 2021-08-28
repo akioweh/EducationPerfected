@@ -15,6 +15,8 @@ __There are two methods of loading this script with the same functionality__:
 - [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo) 
 - [Userscripts](https://itunes.apple.com/us/app/userscripts/id1463298887)
 
+### NOTE: use `scriptBetter.js` if it works for you (since it is better), otherwise use `script.js`  
+
 ### Load Word/Answer List (`Opt/Alt + R`)
 Before each task, Education Perfect provides a list of words and corresponding translations. This script utilizes the information from that screen to learn the answers for each question.  
 **For it to correctly answer all questions, make sure to press `Opt/Alt + R` on the word list screen before each new task to refresh the word list. Also note that sometimes the whole page doesn't load, so you need to scroll through all the questions first. This only happens with comparatively large lists.**
