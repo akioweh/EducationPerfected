@@ -1,6 +1,8 @@
 # EducationPerfected
 JS script to automatically answer Education Perfect language questions.  
 Works for word-word tasks and dash as well.  
+It is ugh, pretty fast:  
+![Usage example](https://github.com/KEN-2000l/EducationPerfected/blob/main/result.png?raw=true)
 
 ## Usage  
 ### Loading/installing the script  
