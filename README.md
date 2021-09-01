@@ -25,7 +25,7 @@ Before each task, Education Perfect provides a list of words and corresponding t
 Finds answers for each question and copies it to your clipboard. You can then simply press `Ctrl/Cmd + V` to paste it into the answer box. Press `Opt/Alt + A` in the questions screen to start the auto-answering.  
 
 ### Fully-Auto Answer (`Opt/Alt + S`)
-By using `Opt/Alt + S`, it will fully-automatically answer and submit all questions (how wonderful!) It should ask you for a time interval (in milliseconds) at which it answers the questions (if you make this too low then it will submit before it has the chance to answer, and will subsequently fail; 100 is recommended), after which it will just answer through them until you either stop it again (Opt/Alt + S), or the list finishes.
+By using `Opt/Alt + S`, it will fully-automatically answer and submit all questions (how wonderful!) It should ask you for a time interval (in milliseconds) at which it answers the questions, and the rest should be automatic.
 
 ### Hotkeys  
 Opt/Alt + R refreshes question/answer list (When on the page with the word list)  
