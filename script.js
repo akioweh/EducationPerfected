@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Education Perfected (Auto-Answer)
 // @namespace    mailto:gshah.6110@gmail.com
-// @version      1.0.0
+// @version      1.0.1
 // @updateURL    https://raw.githubusercontent.com/KEN-2000l/EducationPerfected/main/script.js
 // @downloadURL  https://raw.githubusercontent.com/KEN-2000l/EducationPerfected/main/script.js
 // @description  Basic Script to auto-answer Education Perfect Tasks
