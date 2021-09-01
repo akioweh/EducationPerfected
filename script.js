@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Education Perfected (Auto-Answer)
 // @namespace    mailto:gshah.6110@gmail.com
-// @version      0.5.2
+// @version      1.0.0
 // @updateURL    https://raw.githubusercontent.com/KEN-2000l/EducationPerfected/main/script.js
 // @downloadURL  https://raw.githubusercontent.com/KEN-2000l/EducationPerfected/main/script.js
 // @description  Basic Script to auto-answer Education Perfect Tasks
@@ -16,7 +16,9 @@
     // List of global variables
     let semiTOGGLE = false;
     let autoTOGGLE = false;
-    let fullDict;
+    let fullDict = {};
+    let failCount = 0;
+    let prevQuestion = null;
     let loopInterval = 10;
     let answerSub = ""
 
@@ -28,6 +30,11 @@
     function setToggle(semiState, autoState) {
         semiTOGGLE = semiState;
         autoTOGGLE = autoState;
+    }
+
+    // Simple sleep function used for **speed**
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 
     // Gets the list of words from the specified class. Used solely to declare fullDict
@@ -59,21 +66,15 @@
         return string
     }
 
-    // Submits the answer
+    // Submits the answer :D
     function submitAnswer(answer) {
-        if (document.querySelector("#question-field") != null) {
-            // if the answer was wrong, it grabs the correct answer and changed fullDict as to learn from its mistake
-            setTimeout(function(){ fullDict[cutString(document.querySelector("#question-field").innerText)] = document.querySelector("#correct-answer-field").innerText.split(" | ")[0]; }, 1500);
-            setTimeout(function(){ document.querySelector("#continue-button").click(); }, 2000);
-        } else {
-            // if not, it clicks the submit button and puts the answer into the input box
-            document.getElementsByTagName('button')[7].click();
-            document.getElementsByTagName("input")[0].value = answer;
-        }
+        console.log('answering ' + answer);
+        document.querySelector("#explanation-button").click();
+        document.getElementsByTagName("input")[0].value = answer;
     }
 
-    // The main loop, which runs as specified in the loopInterval
-    function answerLoop() {
+    // One of the main loops, which runs as specified in the loopInterval, and is therefore timed
+    function timedLoop() {
         // Presuming there's a question, it grabs the relevant answer from fullDict
         try {
             let question = document.querySelectorAll("#question-text")[0].innerText;
@@ -83,7 +84,15 @@
 
                 if (autoTOGGLE === true) {
                     // If we are in fully-automatic, the script automatically submits the answer
-                    submitAnswer(answerSub)
+                    if (document.querySelector("#question-field") != null) {
+                        // if the answer was wrong, it grabs the correct answer and changed fullDict as to learn from its mistake
+                        setTimeout(function(){ fullDict[cutString(document.querySelector("#question-field").innerText)] = document.querySelector("#correct-answer-field").innerText.split(" | ")[0]; }, 1500);
+                        setTimeout(function(){ document.querySelector("#continue-button").click(); }, 2000);
+                    } else {
+                        // if not, it clicks the submit button and puts the answer into the input box
+                        document.querySelector("#explanation-button").click();
+                        document.getElementsByTagName("input")[0].value = answerSub;
+                    }
                 }
             } else {
                 console.log("No Question Found");
@@ -91,7 +100,7 @@
 
             // Calls the loop again
             if ((semiTOGGLE === true) || (autoTOGGLE === true)) {
-                setTimeout(function(){answerLoop()}, loopInterval);
+                setTimeout(function(){timedLoop()}, loopInterval);
             }
         } catch (err) {
             setToggle(false, false)
@@ -101,15 +110,70 @@
         }
     }
 
+    async function fastLoop(answerFunc) {
+        while ((semiTOGGLE === true) || (autoTOGGLE === true)) {
+            try {
+                let question = cutString(document.querySelectorAll("#question-text")[0].innerText);
+
+                if (question !== prevQuestion) {
+                    failCount = 0;
+                    prevQuestion = question;
+
+                    let answer = fullDict[question];
+                    answerFunc(answer);
+
+                } else {
+                    if (document.querySelector("#correct-answer-field") != null && document.querySelector("#question-field") != null) {
+                        await sleep(1000);
+                        let correctQ = cutString(document.querySelector("#question-field").innerText);
+                        let correctA = cutString(document.querySelector("#correct-answer-field").innerText);
+                        fullDict[correctQ] = correctA;
+                        console.log('changed ' + correctQ + ' to ' + correctA);
+                        await sleep(100);
+                        document.querySelector("#continue-button").click();
+                    }
+
+                    failCount++;
+                    if (failCount > 3) {
+                        prevQuestion = null;
+                    }
+                }
+
+                let keepRevisingButton = document.querySelector("#keep-revising");
+                if (keepRevisingButton != null) {
+                    keepRevisingButton.click();
+                }
+
+            } catch (err) {
+                failCount++;
+                if (failCount > 20) {
+                    semiTOGGLE = false;
+                    autoTOGGLE = false;
+                    prevQuestion = null;
+                    console.log("An Error has occurred.");
+                    console.log(err);
+                    alert("Error, Auto-Answer Stopped.");
+                }
+            }
+            await sleep(5);
+        }
+    }
+
     // This adds an event listener which reacts appropriately based on the keyboard keys being clicked
     document.addEventListener("keydown", (event) => {
         // Opt/Alt + S
         if ((event.altKey && event.keyCode === 83) || (event.altKey && event.key === 's')) {
             if (autoTOGGLE === false) {
-                loopInterval = parseInt(prompt("How fast would you like to answer the questions (in milliseconds)"))
-                alert("Starting Fully-Auto-Answer");
-                setToggle(false, true);
-                answerLoop();
+                if (confirm('Would you like to do these questions as fast as possible (cancel lets you set a timer)')) {
+                    alert("Starting Fully-Auto-Answer");
+                    setToggle(false, true);
+                    fastLoop(submitAnswer);
+                } else {
+                    loopInterval = parseInt(prompt("How fast would you like to answer the questions (in milliseconds)"))
+                    alert("Starting Fully-Auto-Answer");
+                    setToggle(false, true);
+                    timedLoop();
+                }
             } else if (autoTOGGLE === true) {
                 alert("Stopping Fully-Auto-Answer");
                 loopInterval = 10;
@@ -128,7 +192,7 @@
                 alert("Starting Semi-Auto-Answer");
                 loopInterval = 10;
                 setToggle(true, false);
-                answerLoop();
+                timedLoop();
             } else if (semiTOGGLE === true) {
                 alert("Stopping Semi-Auto-Answer");
                 setToggle(false, false);

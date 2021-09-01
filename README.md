@@ -1,8 +1,8 @@
 # EducationPerfected
 JS script to automatically answer Education Perfect language questions.  
 Works for word-word tasks and dash as well.  
-It is ugh, pretty fast:  
-![Usage example](https://github.com/KEN-2000l/EducationPerfected/blob/main/result.png?raw=true)
+<br>
+![Usage example](result.png)
 
 ## Usage  
 ### Loading/installing the script  
@@ -16,8 +16,6 @@ __There are two methods of loading this script with the same functionality__:
 *Links to Extensions:* 
 - [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo) 
 - [Userscripts](https://itunes.apple.com/us/app/userscripts/id1463298887)
-
-### NOTE: use `scriptBetter.js` if it works for you (since it is better), otherwise use `script.js`  
 
 ### Load Word/Answer List (`Opt/Alt + R`)
 Before each task, Education Perfect provides a list of words and corresponding translations. This script utilizes the information from that screen to learn the answers for each question.  
