@@ -73,44 +73,8 @@
         document.getElementsByTagName("input")[0].value = answer;
     }
 
-    // One of the main loops, which runs as specified in the loopInterval, and is therefore timed
-    function timedLoop() {
-        // Presuming there's a question, it grabs the relevant answer from fullDict
-        try {
-            let question = document.querySelectorAll("#question-text")[0].innerText;
-
-            if (question !== undefined) {
-                answerSub = fullDict[cutString(question)];
-
-                if (autoTOGGLE === true) {
-                    // If we are in fully-automatic, the script automatically submits the answer
-                    if (document.querySelector("#question-field") != null) {
-                        // if the answer was wrong, it grabs the correct answer and changed fullDict as to learn from its mistake
-                        setTimeout(function(){ fullDict[cutString(document.querySelector("#question-field").innerText)] = document.querySelector("#correct-answer-field").innerText.split(" | ")[0]; }, 1500);
-                        setTimeout(function(){ document.querySelector("#continue-button").click(); }, 2000);
-                    } else {
-                        // if not, it clicks the submit button and puts the answer into the input box
-                        document.querySelector("#explanation-button").click();
-                        document.getElementsByTagName("input")[0].value = answerSub;
-                    }
-                }
-            } else {
-                console.log("No Question Found");
-            }
-
-            // Calls the loop again
-            if ((semiTOGGLE === true) || (autoTOGGLE === true)) {
-                setTimeout(function(){timedLoop()}, loopInterval);
-            }
-        } catch (err) {
-            setToggle(false, false)
-            console.log("An Error has occurred.");
-            console.log(err);
-            alert("Error, Auto-Answer Stopped.");
-        }
-    }
-
-    async function fastLoop(answerFunc) {
+    // The main loop, which runs as specified in the loopInterval
+    async function answerLoop() {
         while ((semiTOGGLE === true) || (autoTOGGLE === true)) {
             try {
                 let question = cutString(document.querySelectorAll("#question-text")[0].innerText);
@@ -119,8 +83,10 @@
                     failCount = 0;
                     prevQuestion = question;
 
-                    let answer = fullDict[question];
-                    answerFunc(answer);
+                    answerSub = fullDict[question];
+                    if (autoTOGGLE === true) {
+                        submitAnswer(answerSub);
+                    }
 
                 } else {
                     if (document.querySelector("#correct-answer-field") != null && document.querySelector("#question-field") != null) {
@@ -155,7 +121,7 @@
                     alert("Error, Auto-Answer Stopped.");
                 }
             }
-            await sleep(5);
+            await sleep(loopInterval);
         }
     }
 
@@ -164,16 +130,10 @@
         // Opt/Alt + S
         if ((event.altKey && event.keyCode === 83) || (event.altKey && event.key === 's')) {
             if (autoTOGGLE === false) {
-                if (confirm('Would you like to do these questions as fast as possible (cancel lets you set a timer)')) {
-                    alert("Starting Fully-Auto-Answer");
-                    setToggle(false, true);
-                    fastLoop(submitAnswer);
-                } else {
-                    loopInterval = parseInt(prompt("How fast would you like to answer the questions (in milliseconds)"))
-                    alert("Starting Fully-Auto-Answer");
-                    setToggle(false, true);
-                    timedLoop();
-                }
+                loopInterval = parseInt(prompt("How fast would you like to answer the questions (in milliseconds)"))
+                alert("Starting Fully-Auto-Answer");
+                setToggle(false, true);
+                answerLoop();
             } else if (autoTOGGLE === true) {
                 alert("Stopping Fully-Auto-Answer");
                 loopInterval = 10;
@@ -192,7 +152,7 @@
                 alert("Starting Semi-Auto-Answer");
                 loopInterval = 10;
                 setToggle(true, false);
-                timedLoop();
+                answerLoop();
             } else if (semiTOGGLE === true) {
                 alert("Stopping Semi-Auto-Answer");
                 setToggle(false, false);
