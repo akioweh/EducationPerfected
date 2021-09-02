@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Education Perfected (Auto-Answer)
 // @namespace    mailto:gshah.6110@gmail.com
-// @version      1.0.1
+// @version      1.0.2
 // @updateURL    https://raw.githubusercontent.com/KEN-2000l/EducationPerfected/main/script.js
 // @downloadURL  https://raw.githubusercontent.com/KEN-2000l/EducationPerfected/main/script.js
 // @description  Basic Script to auto-answer Education Perfect Tasks
@@ -75,7 +75,9 @@
 
     // The main loop, which runs as specified in the loopInterval
     async function answerLoop() {
+        // As long as one of the modes is on, the loop runs
         while ((semiTOGGLE === true) || (autoTOGGLE === true)) {
+            // If there's a question to be answered, it answers the questions, and if not, it corrects itself (woo ~learning~)
             try {
                 let question = cutString(document.querySelectorAll("#question-text")[0].innerText);
 
@@ -112,6 +114,7 @@
 
             } catch (err) {
                 failCount++;
+                console.log(err)
                 if (failCount > 20) {
                     semiTOGGLE = false;
                     autoTOGGLE = false;
@@ -131,9 +134,15 @@
         if ((event.altKey && event.keyCode === 83) || (event.altKey && event.key === 's')) {
             if (autoTOGGLE === false) {
                 loopInterval = parseInt(prompt("How fast would you like to answer the questions (in milliseconds)"))
-                alert("Starting Fully-Auto-Answer");
-                setToggle(false, true);
-                answerLoop();
+                if (isNaN(loopInterval)) {
+                    alert("Cancelled Fully-Auto-Answer");
+                    loopInterval = 10;
+                    setToggle(false, false);
+                } else {
+                    alert("Starting Fully-Auto-Answer");
+                    setToggle(false, true);
+                    answerLoop();
+                }
             } else if (autoTOGGLE === true) {
                 alert("Stopping Fully-Auto-Answer");
                 loopInterval = 10;
