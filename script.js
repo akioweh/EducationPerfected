@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Education Perfected (Auto-Answer)
 // @namespace    http://tampermonkey.net/
-// @version      1.1.1
+// @version      1.1.3
 // @updateURL    https://raw.githubusercontent.com/KEN-2000l/EducationPerfected/main/script.js
 // @downloadURL  https://raw.githubusercontent.com/KEN-2000l/EducationPerfected/main/script.js
 // @description  Auto-answer Education Perfect Tasks at HIGH Speeds
@@ -16,6 +16,7 @@
     let autoTOGGLE = false;
     let fullDict = {};
     let cutDict = {};
+    let answerSub = "";
     let msg = "";
 
     function sleep(ms) {
@@ -76,24 +77,23 @@
         fullDict[question] = answer;
     }
 
-    async function copyAnswer(answer) {
-        await navigator.clipboard.writeText(answer);
-    }
-
     async function submitAnswer(answer) {
         msg = "Thought answered: \n" + answer + "\n";
         (await submitButton()).click();
         document.querySelector("input#answer-text").value = answer;
     }
 
-    async function answerLoop(answerFunc) {
+    async function answerLoop() {
         let failCount = 0;
         while (semiTOGGLE || autoTOGGLE) {
             try {
                 let question = document.querySelector("#question-text").innerText;
                 let answer = findAnswer(question);
                 if (answer === undefined) console.log("no answer found");
-                await answerFunc(answer);
+                answerSub = answer
+                if (autoTOGGLE === true) {
+                    await submitAnswer(answerSub);
+                }
 
                 if (document.querySelector("td#correct-answer-field") != null && document.querySelector("#question-field") != null) {
                     await correctAnswer(question);
@@ -112,25 +112,24 @@
                     alert("Error, Auto-Answer Stopped.");
                 }
             }
-            await sleep(1);
+            await sleep(0);
         }
     }
 
     document.addEventListener("keydown", async (event) => {
-        console.log(event.key)
         if ((event.altKey && event.key.toLowerCase() === "r") || (event.key.toLowerCase() === "®")) {
             mergeLists(wordList("targetLanguage"), wordList("baseLanguage"));
             console.log(fullDict, cutDict);
             alert("Word List Refreshed");
         }
 
-        if ((event.altKey && event.key.toLowerCase() === "a") || (event.key.toLowerCase() === "å")) {
+        else if ((event.altKey && event.key.toLowerCase() === "a") || (event.key.toLowerCase() === "å")) {
             if (semiTOGGLE === false) {
                 autoTOGGLE = false;
                 semiTOGGLE = true;
                 await sleep(10);
                 alert("Starting Semi-Auto-Answer");
-                await answerLoop(copyAnswer);
+                await answerLoop();
             } else {
                 deleteModals();
                 alert("Stopping Semi-Auto-Answer");
@@ -138,13 +137,19 @@
             }
         }
 
-        if ((event.altKey && event.key.toLowerCase() === "s") || (event.key.toLowerCase() === "ß")) {
+        else if ((event.metaKey && semiTOGGLE === true) || (event.ctrlKey && semiTOGGLE === true)) {
+            navigator.clipboard.writeText(answerSub).then(function(arr) {}, function(arr) {
+                console.log(`Failed to Copy Answer: ${arr}`)
+            });
+        }
+
+        else if ((event.altKey && event.key.toLowerCase() === "s") || (event.key.toLowerCase() === "ß")) {
             if (autoTOGGLE === false) {
                 semiTOGGLE = false;
                 autoTOGGLE = true;
                 await sleep(10);
                 alert("Starting Fully-Auto-Answer");
-                await answerLoop(submitAnswer);
+                await answerLoop();
             } else {
                 deleteModals();
                 alert("Stopping Fully-Auto-Answer");
