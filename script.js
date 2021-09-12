@@ -117,13 +117,14 @@
     }
 
     document.addEventListener("keydown", async (event) => {
-        if (event.altKey && event.key.toLowerCase() === "r") {
+        console.log(event.key)
+        if ((event.altKey && event.key.toLowerCase() === "r") || (event.key.toLowerCase() === "®")) {
             mergeLists(wordList("targetLanguage"), wordList("baseLanguage"));
             console.log(fullDict, cutDict);
             alert("Word List Refreshed");
         }
 
-        if (event.altKey && event.key.toLowerCase() === "a") {
+        if ((event.altKey && event.key.toLowerCase() === "a") || (event.key.toLowerCase() === "å")) {
             if (semiTOGGLE === false) {
                 autoTOGGLE = false;
                 semiTOGGLE = true;
@@ -137,7 +138,7 @@
             }
         }
 
-        if (event.altKey && event.key.toLowerCase() === "s") {
+        if ((event.altKey && event.key.toLowerCase() === "s") || (event.key.toLowerCase() === "ß")) {
             if (autoTOGGLE === false) {
                 semiTOGGLE = false;
                 autoTOGGLE = true;
