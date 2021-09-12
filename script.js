@@ -108,6 +108,7 @@
                     semiTOGGLE = false;
                     autoTOGGLE = false;
                     console.log(err);
+                    deleteModals();
                     alert("Error, Auto-Answer Stopped.");
                 }
             }
@@ -130,6 +131,7 @@
                 alert("Starting Semi-Auto-Answer");
                 await answerLoop(copyAnswer);
             } else {
+                deleteModals();
                 alert("Stopping Semi-Auto-Answer");
                 semiTOGGLE = false;
             }
@@ -143,6 +145,7 @@
                 alert("Starting Fully-Auto-Answer");
                 await answerLoop(submitAnswer);
             } else {
+                deleteModals();
                 alert("Stopping Fully-Auto-Answer");
                 autoTOGGLE = false;
             }
