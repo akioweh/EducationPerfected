@@ -6,7 +6,7 @@
 // @downloadURL  https://raw.githubusercontent.com/KEN-2000l/EducationPerfected/main/script.js
 // @description  Auto-answer Education Perfect Tasks at HIGH Speeds
 // @author       KEN_2000, Garv
-// @match        *://www.educationperfect.com/app/*
+// @match        *://*.educationperfect.com/*
 // @grant        none
 // ==/UserScript==
 
