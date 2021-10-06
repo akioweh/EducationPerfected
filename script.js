@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Education Perfected (Auto-Answer)
 // @namespace    http://tampermonkey.net/
-// @version      1.1.4
+// @version      1.1.5
 // @updateURL    https://raw.githubusercontent.com/KEN-2000l/EducationPerfected/main/script.js
 // @downloadURL  https://raw.githubusercontent.com/KEN-2000l/EducationPerfected/main/script.js
 // @description  Auto-answer Education Perfect Tasks at HIGH Speeds
@@ -91,6 +91,16 @@
                 let answer = findAnswer(question);
                 if (answer === undefined) console.log("no answer found");
                 answerSub = answer
+
+                if (semiTOGGLE === true) {
+                    try {
+                        await navigator.clipboard.writeText(answerSub)
+                    }
+                    catch {
+                        console.log("if you're on Safari, ignore this error, if not, please report this as a bug at EducationPerfected if something isn't working")
+                    }
+                }
+
                 if (autoTOGGLE === true) {
                     await submitAnswer(answerSub);
                 }
