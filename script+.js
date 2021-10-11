@@ -1,8 +1,10 @@
 // ==UserScript==
 // @name         Education Perfectionist
 // @namespace    http://tampermonkey.net/
-// @version      0.0.0
-// @description  Auto-answer Education Perfect Tasks at HIGH-er Speeds
+// @version      1.1.1
+// @updateURL    https://raw.githubusercontent.com/KEN-2000l/EducationPerfected/main/script.js
+// @downloadURL  https://raw.githubusercontent.com/KEN-2000l/EducationPerfected/main/script.js
+// @description  Auto-answer Education Perfect Tasks at HIGH Speeds
 // @author       KEN_2000, Garv
 // @match        *://*.educationperfect.com/app/*
 // @grant        none
@@ -22,21 +24,42 @@ async function ifExistsDo(selector, func) {
     return Boolean(element);
 }
 
+async function sleepUntil(f, timeout) {
+    return new Promise((resolve, reject) => {
+        let wait = setInterval(function() {
+            if (f()) {
+                clearInterval(wait);
+                resolve();
+            }
+        }, 10);
+
+        setTimeout(() => {
+            clearInterval(wait);
+            reject();
+        }, timeout)
+    });
+}
+
 function untilElement(selector, timeout) {
-    return Promise.race([
-            new Promise((res, _rej) => {
-                const el = document.querySelector(selector);
-                if (el) res(el);
-                new MutationObserver((mutationRecords, observer) => {
-                    Array.from(document.querySelectorAll(selector)).forEach((el) => {
-                        res(el);
-                        observer.disconnect();
-                    });
-                }).observe(document.documentElement, {childList: true, subtree: true});
-            }),
-            new Promise((_res, rej) => setTimeout(rej, timeout))
-        ]
-    );
+    return new Promise((resolve,reject) => {
+        let hasChanged = false;
+        const observer = new MutationObserver(() => {
+            Array.from(document.querySelectorAll(selector)).forEach((el) => {
+                hasChanged = true;
+                resolve(el);
+                observer.disconnect();
+            });
+        });
+
+        setTimeout(() => {
+            if (!hasChanged) {
+                observer.disconnect();
+                reject(selector)
+            }
+        }, timeout);
+
+        observer.observe(document.documentElement, {childList: true, subtree: true});
+    });
 }
 
 function cleanString(string) {
@@ -79,11 +102,8 @@ function findAnswer(question) {
 }
 
 async function correctAnswer(question) {
+    await sleepUntil(() => {return document.querySelector('td#question-field').innerText !== 'blau'}, 3000);
     msg = msg + `Extracted Question: ${question}\n`;
-    for (let i = 0; i < 300; i++) {
-        if (document.querySelector('td#question-field').innerText !== 'blau') break;
-        await sleep(10);
-    }
     msg = msg + `Correct question: ${document.querySelector('td#question-field').innerText}\n`;
 
     const answer = document.querySelector('td#correct-answer-field').innerText;
@@ -116,11 +136,11 @@ async function answerLoop() {
         }
         await sleep(0);
     }
-    for (let i = 0; i < 30; i++) {
-        await sleep(100);
-        let continueButton = document.querySelector('#start-button-main');
-        if (continueButton !== null && continueButton.innerText === 'Continue' ) break;
-    }
+
+    await sleepUntil(() => {
+        const continueButton = document.querySelector('#start-button-main');
+        return continueButton !== null && continueButton.innerText === 'Continue'
+    }, 3000);
     document.querySelector('#start-button-main').disabled = false;
     document.querySelector('#start-button-main').click();
 
