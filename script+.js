@@ -2,6 +2,8 @@
 // @name         Education Perfectionist
 // @namespace    http://tampermonkey.net/
 // @version      2.0.0
+// @updateURL    https://raw.githubusercontent.com/KEN-2000l/EducationPerfected/main/script%2B.js
+// @downloadURL  https://raw.githubusercontent.com/KEN-2000l/EducationPerfected/main/script%2B.js
 // @description  Auto-answer Education Perfect Tasks at HIGH Speeds
 // @author       KEN_2000, Garv
 // @match        *://*.educationperfect.com/app/*
