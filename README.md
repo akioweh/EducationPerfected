@@ -64,7 +64,7 @@ Upon loading/injecting, the script does not do anything. **All functions are tri
 ## `script+.js`
 *For those point-farmers...*  
 #### Even-more-automated version of the standard: self-navigation between tasks to *farm points AFK* (how wonderful-er!)  
-Has one hotkey of <kbd>Opt/Alt</kbd> + <kbd>A</kbd>. Usable in three contexts: Task-starter page with word list, *language* subject homepage, or folder/directory in the subject content browser.  
+Has one hotkey of <kbd>Opt/Alt</kbd> + <kbd>S</kbd>. Usable in three contexts: Task-starter page with word list, *language* subject homepage, or folder/directory in the subject content browser.  
 When the hotkey is pressed, it will explode your mind by completing as many tasks as it can depending on the activation context:  
   - Subject homepage => everything in the subject
   - Content browser => everything within the current folder
