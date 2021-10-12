@@ -1,44 +1,71 @@
 # EducationPerfected
-JS script to automatically answer Education Perfect language questions.  
-Works for word-word tasks and dash.  
+#### Javascript user-script to automatically answer Education Perfect language questions.  
+Works for word-word (translation) tasks and Dash mode.  
 **Does not work with Audio-tasks, YET.**  
   
-###### *P.S. guys stop farming points to steal my top ranking on the global leaderboard smhsmhsmh*  
+###### *P.S. guys pls stop farming points to steal my top ranking on the Global leaderboard smhsmhsmh*  
 
 ![example image](result.png)
 
+
 ## Usage  
 ### Loading/installing the script  
-__There are two methods of loading this script with the same functionality__:
- - **Plain script**: Load by copying and pasting the contents of the `script.js` file into your browser's inspect mode console (for example Ctrl-Shift-I on chrome). As this method is manual, you'll have to repeat this everytime load/reload the EP page.  
+The script or program itself is in `script.js`. Click `script.js` above amongst the files to get the code.  
+This script works by being "injected" into, or to execute on top of, a webpage (with Education Perfect open).  
+**There are two main ways to inject this script:**  
 
- - **Browser Extension (recommended)**: 
-   - Tampermonkey is a browser extension available for Edge, Chrome, etc. It automatically loads the script on the Education Perfect website, so you won't have to open the console and paste each time. Install by copying and pasting the contents of the `script.js` file into a new script file (delete any template code in there) in the extension's dashboard, and press `Ctrl/Cmd + S` to save. After it's saved, it should automatically load on the website, and the hotkeys should work.  
-   - Although Tampermonkey can be used on Safari, it costs money, so instead you can use an open source alternative called Userscripts. It works in almost the same way as described above.
+  - **One-time; console**:  
+    Paste the script contents into the DevTools (aka inspect mode) console on a Education Perfect page. (Then press enter, and you can close the DevTools panel.)  
+    <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>I</kbd> is a standard keybind to open DevTools, and the console is one of the tabs usally located at the top.  
+    This is a manual and temporary solution; you will have to manually re-inject each time you open/refresh the Education Perfect page.
 
-*Links to Extensions:* 
-- [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo) 
-- [Userscripts](https://itunes.apple.com/us/app/userscripts/id1463298887)
+  - **Auto-load; browser extension (Recommended)**:  
+    A browser extension designed to manage such scripts can automatically inject the script in the background each time you load the page. One such extension is called [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo).  
+    Install Extension >> Open extension popup/menu (by clicking its icon) >> Click `Create a new script...` >> Delete all template code >> paste the script in >> <kbd>Ctrl</kbd> + <kbd>S</kbd> to save >> (Close editor) >> Script will autoload when you load Education Perfect each time (refresh to load if you the page already open)  
+    
+    *Note: use [Userscripts](https://itunes.apple.com/us/app/userscripts/id1463298887) on Safari as Tampermonkey is paid there.*
 
-### Load Word/Answer List (`Opt/Alt + R`)
-Before each task, Education Perfect provides a list of words and corresponding translations. This script utilizes the information from that screen to learn the answers for each question.  
-**For it to correctly answer all questions, make sure to press `Opt/Alt + R` on the word list screen before each new task to refresh the word list. Also note that sometimes the whole page doesn't load, so you need to scroll through all the questions first. This only happens with comparatively large lists.**
-
-### Semi-Manual Answer (`Opt/Alt + A`)
-Finds answers for each question and copies it to your clipboard. You can then simply press `Ctrl/Cmd + V` to paste it into the answer box. Press `Opt/Alt + A` in the questions screen to start the auto-answering.  
-
-### Fully-Auto Answer (`Opt/Alt + S`)
-By using `Opt/Alt + S`, it will fully-automatically answer and submit all questions (how wonderful!) Try this out!!! It is incredibly fast.  
 
 ### Hotkeys  
-Opt/Alt + R refreshes question/answer list (When on task page with word list)  
-Opt/Alt + A starts the clipboard auto answer (While one question page)  
-Opt/Alt + S answers the questions fully automatically (While on question page)  
+Upon loading/injecting, the script does not do anything. **All functions are triggered via *hotkeys/keybinds* as listed below:**  
 
-## To Do:  
+  - **Load/Refresh Word List -> <kbd>Opt/Alt</kbd> + <kbd>R</kbd>:**  
+    *To be used on task-starter page with list of words and translations*  
+    Scrapes the translations displayed and utilizes that information to answer questions.  
+    For it to correctly answer all questions, make sure to refresh the word list before each new task.  
+
+  - **Semi-Manual Answer -> <kbd>Opt/Alt</kbd> + <kbd>A</kbd>:**  
+    *To be used on a running task's page (after clicking start)*  
+    Finds the answer for each question and copies it to your clipboard.  
+    You can then simply press <kbd>Ctrl/Cmd</kbd> + <kbd>V</kbd> to paste it into the answer box (and press enter to submit).  
+
+  - **Fully-Auto Answer -> <kbd>Opt/Alt</kbd> + <kbd>S</kbd>:**  
+    *To be used on a running task's page (after clicking start)*  
+    Finds the answer for each question and automatically enters it and submits it. (Completes a task mode fully-auto; how wonderful!)  
+    It has been optimized for maximal speed!   
+    
+    *Note: You can also pause the auto-answer midway by pressing the hotkey again.*  
+
+
+### Extras
+#### Feature-Explanation
+  - **Full Speed Auto Answer:**  
+    The current speed is the maximum we can acheive so far. It will probably not be possible to go faster without a different concept.  
+    
+  - **Self-Learning/Error Correction:**  
+    When an error is made (due to bad question/answer parsing, lag, or missing word list), the script handles the popup and extracts the corret answer information to stop making the same mistake again (hopefully).  
+    The incorrect answer popup has a normal delay of 3 seconds before you can close it, but that's slow so it instead gets delyeeted :P  
+    
+  - **Smart-ish Word Parsing:**  
+    A big source of incorrect answers is when no answer is found due to unsatisfactory matching (of the question to an answer).  
+    Education perfect is annoying in the sense of having really bad formatting standards. The entries on the word list can be dislayed differently as a question (and there are many different edge cases).  The script handles *most* of these edge cases, and for those that still fail to match, the self-learning function will take care of that in *most* of the remaining scenarios. There are still extreme cases of really bad formatting (such as commas with repeated words and blatant disparities between displayed answer and expected answer) where a question may not get correctly answered. These should also get fixed soon.  
+
+
+### To Do  
 - [X] Make the program learn from its mistakes
 - [X] Make auto-answer even faster
+- [X] Full auto mode to navigate between tasks to farm points AFK
 - [ ] Compatibility with Audio-based tasks
-- [ ] Create a salter (makes it so the interval between answering the questions isn't consistent)  
+- [ ] Pretend to be a human?? (Such as a salter)  
 
-### By [Garv](https://github.com/garv-shah) and [KEN_2000](https://github.com/KEN-2000l)
+#### *By [Garv](https://github.com/garv-shah) and [KEN_2000](https://github.com/KEN-2000l)*
