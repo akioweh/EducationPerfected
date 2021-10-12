@@ -61,10 +61,20 @@ Upon loading/injecting, the script does not do anything. **All functions are tri
     Education perfect is annoying in the sense of having really bad formatting standards. The entries on the word list can be dislayed differently as a question (and there are many different edge cases).  The script handles *most* of these edge cases, and for those that still fail to match, the self-learning function will take care of that in *most* of the remaining scenarios. There are still extreme cases of really bad formatting (such as commas with repeated words and blatant disparities between displayed answer and expected answer) where a question may not get correctly answered. These should also get fixed soon.  
 
 
+## `script+.js`
+*For those point-farmers...*  
+#### Even-more-automated version of the standard: self-navigation between tasks to *farm points AFK* (how wonderful-er!)  
+Has one hotkey of <kbd>Opt/Alt</kbd> + <kbd>A</kbd>. Usable in three contexts: Task-starter page with word list, *language* subject homepage, or folder/directory in the subject content browser.  
+When the hotkey is pressed, it will explode your mind by completing as many tasks as it can depending on the activation context:  
+  - Subject homepage => everything in the subject
+  - Content browser => everything within the current folder
+  - Task-starter page => this task
+
+
 ### To Do  
 - [X] Make the program learn from its mistakes
 - [X] Make auto-answer even faster
-- [X] Full auto mode to navigate between tasks to farm points AFK
+- [X] Full auto mode to navigate between tasks to farm points AFK (`script+.js`)
 - [ ] Compatibility with Audio-based tasks
 - [ ] Pretend to be a human?? (Such as a salter)  
 
