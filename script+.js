@@ -249,7 +249,7 @@ const subjectBrowser = () => {return Boolean(window.location.href.match(/^https?
 
 (async function () {
     document.addEventListener('keydown', async (event) => {
-        if (event.altKey && event.key.toLowerCase() === 's') {
+        if ((event.altKey && event.key.toLowerCase() === "s") || (event.key.toLowerCase() === "ß")) {
             // if (epHome()) await completeAll();
             if (subjectHome()) await completeSubject();
             if (subjectBrowser()) await completeFolder();
