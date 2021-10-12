@@ -1,9 +1,7 @@
 // ==UserScript==
 // @name         Education Perfectionist
 // @namespace    http://tampermonkey.net/
-// @version      1.1.1
-// @updateURL    https://raw.githubusercontent.com/KEN-2000l/EducationPerfected/main/script.js
-// @downloadURL  https://raw.githubusercontent.com/KEN-2000l/EducationPerfected/main/script.js
+// @version      2.0.0
 // @description  Auto-answer Education Perfect Tasks at HIGH Speeds
 // @author       KEN_2000, Garv
 // @match        *://*.educationperfect.com/app/*
@@ -13,6 +11,7 @@
 let fullDict = {};
 let cutDict = {};
 let msg = '';
+let urlCache = '';
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -41,8 +40,13 @@ async function sleepUntil(f, timeout) {
 }
 
 function untilElement(selector, timeout) {
-    return new Promise((resolve,reject) => {
-        let hasChanged = false;
+    let hasChanged = false;
+
+    return new Promise((resolve, reject) => {
+        Array.from(document.querySelectorAll(selector)).forEach((el) => {
+            hasChanged = true;
+            resolve(el);
+        });
         const observer = new MutationObserver(() => {
             Array.from(document.querySelectorAll(selector)).forEach((el) => {
                 hasChanged = true;
@@ -60,6 +64,13 @@ function untilElement(selector, timeout) {
 
         observer.observe(document.documentElement, {childList: true, subtree: true});
     });
+}
+
+async function untilURLChange(timeout) {
+    urlCache = window.location.href;
+    return new Promise(resolve => sleepUntil(() => {
+        return window.location.href !== urlCache;
+    }, timeout).then(resolve).catch(resolve));
 }
 
 function cleanString(string) {
@@ -102,7 +113,7 @@ function findAnswer(question) {
 }
 
 async function correctAnswer(question) {
-    await sleepUntil(() => {return document.querySelector('td#question-field').innerText !== 'blau'}, 3000);
+    await sleepUntil(() => {return document.querySelector('td#question-field').innerText !== 'blau'}, 3000).catch();
     msg = msg + `Extracted Question: ${question}\n`;
     msg = msg + `Correct question: ${document.querySelector('td#question-field').innerText}\n`;
 
@@ -117,7 +128,7 @@ async function correctAnswer(question) {
 }
 
 async function answerLoop() {
-    let started = false;
+    let fails = 0;
     while (true) {
         try {
             let question = document.querySelector('#question-text').innerText;
@@ -127,12 +138,13 @@ async function answerLoop() {
             submitButton();
             document.querySelector('input#answer-text').value = answer;
 
-            await ifExistsDo('td#correct-answer-field', async (_el) => {await correctAnswer(question)});
-            await ifExistsDo('button.continue-button', (el) => {el.click()});
-            started = true;
+            await ifExistsDo('td#correct-answer-field', async () => await correctAnswer(question));
+            await ifExistsDo('button.continue-button', el => el.click());
+            fails = 0;
         } catch (err) {
+            fails++;
             console.log(err);
-            if (started) break;
+            if (fails > 30) break;
         }
         await sleep(0);
     }
@@ -140,18 +152,18 @@ async function answerLoop() {
     await sleepUntil(() => {
         const continueButton = document.querySelector('#start-button-main');
         return continueButton !== null && continueButton.innerText === 'Continue'
-    }, 3000);
+    }, 3000).catch();
     document.querySelector('#start-button-main').disabled = false;
     document.querySelector('#start-button-main').click();
 
     deleteModals();
 }
 
-
 async function startAnswer() {
-    await ifExistsDo('#full-list-switcher', async (el) => {el.click(); await sleep(200)});
+    await ifExistsDo('#full-list-switcher', async el => {el.click(); await sleep(200)});
 
-    await mergeLists(wordList('div.targetLanguage'), wordList('div.baseLanguage')); await sleep(200);
+    await sleep(400);
+    await mergeLists(wordList('div.targetLanguage'), wordList('div.baseLanguage'));
     console.log(fullDict, cutDict);
 
     document.querySelector('.main-text.ng-binding.infinity').click();
@@ -165,26 +177,83 @@ async function startAnswer() {
         return;
     }
     await answerLoop();
-    await untilElement('li.mode-0', 5000).catch((_) => {});
+    await untilElement('li.mode-0', 5000).catch();
 }
 
-async function answerAll() {
-    await ifExistsDo('li.mode-0', async (el) => {
+async function completeTask() {
+    await ifExistsDo('li.mode-0', async el => {
         el.click();
         await startAnswer();
     });
-    await ifExistsDo('li.mode-1', async (el) => {
+    await ifExistsDo('li.mode-1', async el => {
         el.click();
         await startAnswer();
     });
-    console.log('Answered All');
+    console.log('Completed one task.');
 }
 
+// let subjects = document.querySelectorAll('div.subject-title');
+
+const notLoading = () => {
+    let spins = Array.from(document.querySelectorAll('.EdsSpinner_eds-component_2tfd5'));
+    let unspins = Array.from(document.querySelectorAll('.EdsSpinner_eds-component_2tfd5[block="true"]'));
+    spins = spins.filter(el => !unspins.includes(el));
+    return spins.length === 0;
+};
+
+async function completeFolder() {
+    await sleepUntil(notLoading, 7000).catch();
+    console.log(`Called with url ${window.location.href}`);
+    const items = document.querySelectorAll('div.crumb-child.item');
+    // const activities = [];
+    // Array.from(document.querySelectorAll('path[fill="#ffb100"]')).forEach(
+    //     el => activities.push(el.parentNode.parentNode.parentNode.parentNode.parentNode));
+    const vocabs = [];
+    Array.from(document.querySelectorAll('path[fill="#3838ea"]')).forEach(
+        el => vocabs.push(el.parentNode.parentNode.parentNode.parentNode.parentNode));
+    const folders = [];
+    Array.from(document.querySelectorAll('div.folder-icon')).forEach(
+        el => folders.push(el.parentNode.parentNode));
+
+    for (let j = 0; j < items.length; j++) {
+        const i = items[j];
+        if (vocabs.includes(i)) {
+            document.querySelectorAll('div.crumb-child.item')[j].click();
+            await untilURLChange(30000).catch();
+            await sleepUntil(notLoading, 7000).catch();
+            await completeTask();
+        } else if (folders.includes(i)) {
+            document.querySelectorAll('div.crumb-child.item')[j].click();
+            await sleepUntil(notLoading, 7000).catch();
+            await completeFolder();
+            console.log('Completed one folder.');
+        } else {
+            continue;
+        }
+        await untilElement('div.back-arrow', 3000).then(el => el.click()).catch();
+        await sleepUntil(notLoading, 7000).catch();
+    }
+}
+
+async function completeSubject() {
+    untilElement('#subject-browse-button', 5000)
+        .then(el => el.click())
+        .catch();
+    await untilURLChange(30000).catch();
+    await completeFolder(window.location.href);
+}
+
+const epHome = () => {return Boolean(window.location.href.match(/^https?:\/\/app.educationperfect.com\/app\/#\/dashboard\/$/gi))};
+const subjectHome = () => {return Boolean(window.location.href.match(/^https?:\/\/app.educationperfect.com\/app\/#\/dashboard\/(?!(tasks|competitions|history)\b)\b\w+\/$/gi))};
+const subjectBrowser = () => {return Boolean(window.location.href.match(/^https?:\/\/app.educationperfect.com\/app\/#\/dashboard\/(?!(tasks|competitions|history)\b)\b\w+\/content\//gi))};
 
 (async function () {
     document.addEventListener('keydown', async (event) => {
         if (event.altKey && event.key.toLowerCase() === 's') {
-            if (window.location.href.includes('/list-starter')) await answerAll();
+            // if (epHome()) await completeAll();
+            if (subjectHome()) await completeSubject();
+            if (subjectBrowser()) await completeFolder();
+            if (window.location.href.includes('/list-starter')) await completeTask();
         }
     });
 })();
