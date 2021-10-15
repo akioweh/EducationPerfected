@@ -1,12 +1,12 @@
 const pickrContainer = document.querySelector('.pickr-container');
-let currentSetting = "--bg-color"
+let currentSetting = "--ep-bg-color"
 let pickr = null
 
 function setSetting(input) {
     if (localStorage.getItem('switchedTheme') === 'true') {
-        currentSetting = '--light-' + input
+        currentSetting = '--ep-light-' + input
     } else {
-        currentSetting = '--dark-' + input
+        currentSetting = '--ep-dark-' + input
     }
 
     const el = document.createElement('p');
@@ -70,7 +70,7 @@ function setSetting(input) {
         // Listen to any key-events
         result.addEventListener('keydown', e => {
 
-            // Detect whever the user pressed "Enter" on their keyboard
+            // Detect whoever the user pressed "Enter" on their keyboard
             if (e.key === 'Enter') {
                 instance.applyColor(); // Save the currently selected color
                 instance.hide(); // Hide modal
@@ -92,10 +92,10 @@ function setSetting(input) {
     });
 }
 
-document.querySelector('#page > main > section > div:nth-child(3) > div > div.col-auto.col-md-6.d-sm-flex.d-md-flex.flex-fill.justify-content-sm-start.align-items-sm-center.justify-content-md-start.align-items-md-center > input').placeholder = getComputedStyle(document.querySelector(':root')).getPropertyValue('--dark-switch-text').replace(/"/g,'')
-document.querySelector('#page > main > section > div:nth-child(4) > div > div.col-auto.col-md-6.d-sm-flex.d-md-flex.flex-fill.justify-content-sm-start.align-items-sm-center.justify-content-md-start.align-items-md-center > input').placeholder = getComputedStyle(document.querySelector(':root')).getPropertyValue('--dark-switch-icon').replace(/"/g,'')
-document.querySelector('#page > main > section > div:nth-child(5) > div > div.col-auto.col-md-6.d-sm-flex.d-md-flex.flex-fill.justify-content-sm-start.align-items-sm-center.justify-content-md-start.align-items-md-center > input').placeholder = getComputedStyle(document.querySelector(':root')).getPropertyValue('--light-switch-text').replace(/"/g,'')
-document.querySelector('#page > main > section > div:nth-child(6) > div > div.col-auto.col-md-6.d-sm-flex.d-md-flex.flex-fill.justify-content-sm-start.align-items-sm-center.justify-content-md-start.align-items-md-center > input').placeholder = getComputedStyle(document.querySelector(':root')).getPropertyValue('--light-switch-icon').replace(/"/g,'')
+document.querySelector('#page > main > section > div:nth-child(3) > div > div.col-auto.col-md-6.d-sm-flex.d-md-flex.flex-fill.justify-content-sm-start.align-items-sm-center.justify-content-md-start.align-items-md-center > input').placeholder = getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-dark-switch-text').replace(/"/g,'')
+document.querySelector('#page > main > section > div:nth-child(4) > div > div.col-auto.col-md-6.d-sm-flex.d-md-flex.flex-fill.justify-content-sm-start.align-items-sm-center.justify-content-md-start.align-items-md-center > input').placeholder = getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-dark-switch-icon').replace(/"/g,'')
+document.querySelector('#page > main > section > div:nth-child(5) > div > div.col-auto.col-md-6.d-sm-flex.d-md-flex.flex-fill.justify-content-sm-start.align-items-sm-center.justify-content-md-start.align-items-md-center > input').placeholder = getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-light-switch-text').replace(/"/g,'')
+document.querySelector('#page > main > section > div:nth-child(6) > div > div.col-auto.col-md-6.d-sm-flex.d-md-flex.flex-fill.justify-content-sm-start.align-items-sm-center.justify-content-md-start.align-items-md-center > input').placeholder = getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-light-switch-icon').replace(/"/g,'')
 
 function save() {
     let dark_switch_text = document.querySelector('#page > main > section > div:nth-child(3) > div > div.col-auto.col-md-6.d-sm-flex.d-md-flex.flex-fill.justify-content-sm-start.align-items-sm-center.justify-content-md-start.align-items-md-center > input')
@@ -105,50 +105,50 @@ function save() {
 
     if (dark_switch_text.value !== "") {
         console.log(dark_switch_text.value)
-        document.querySelector(':root').style.setProperty('--dark-switch-text', '"' + dark_switch_text.value + '"')
+        document.querySelector(':root').style.setProperty('--ep-dark-switch-text', '"' + dark_switch_text.value + '"')
         dark_switch_text.placeholder = dark_switch_text.value
     }
 
     if (dark_switch_icon.value !== "") {
-        document.querySelector(':root').style.setProperty('--dark-switch-icon', '"' + dark_switch_icon.value + '"')
+        document.querySelector(':root').style.setProperty('--ep-dark-switch-icon', '"' + dark_switch_icon.value + '"')
         dark_switch_icon.placeholder = dark_switch_icon.value
     }
 
     if (light_switch_text.value !== "") {
-        document.querySelector(':root').style.setProperty('--light-switch-text', '"' + light_switch_text.value + '"')
+        document.querySelector(':root').style.setProperty('--ep-light-switch-text', '"' + light_switch_text.value + '"')
         light_switch_text.placeholder = light_switch_text.value
     }
 
     if (light_switch_icon.value !== "") {
-        document.querySelector(':root').style.setProperty('--light-switch-icon', '"' + light_switch_icon.value + '"')
+        document.querySelector(':root').style.setProperty('--ep-light-switch-icon', '"' + light_switch_icon.value + '"')
         light_switch_icon.placeholder = light_switch_icon.value
     }
 
-    localStorage.setItem('--light-switch-shadow', getComputedStyle(document.querySelector(':root')).getPropertyValue('--light-switch-shadow'))
-    localStorage.setItem('--light-switch-icon', getComputedStyle(document.querySelector(':root')).getPropertyValue('--light-switch-icon'))
-    localStorage.setItem('--light-switch-text', getComputedStyle(document.querySelector(':root')).getPropertyValue('--light-switch-text'))
-    localStorage.setItem('--light-text', getComputedStyle(document.querySelector(':root')).getPropertyValue('--light-text'))
-    localStorage.setItem('--light-secondary-text', getComputedStyle(document.querySelector(':root')).getPropertyValue('--light-secondary-text'))
-    localStorage.setItem('--light-muted-text', getComputedStyle(document.querySelector(':root')).getPropertyValue('--light-muted-text'))
-    localStorage.setItem('--light-bg', getComputedStyle(document.querySelector(':root')).getPropertyValue('--light-bg'))
-    localStorage.setItem('--light-secondary-bg', getComputedStyle(document.querySelector(':root')).getPropertyValue('--light-secondary-bg'))
-    localStorage.setItem('--light-theme', getComputedStyle(document.querySelector(':root')).getPropertyValue('--light-theme'))
-    localStorage.setItem('--light-bar', getComputedStyle(document.querySelector(':root')).getPropertyValue('--light-bar'))
-    localStorage.setItem('--light-highlight', getComputedStyle(document.querySelector(':root')).getPropertyValue('--light-highlight'))
+    localStorage.setItem('--ep-light-switch-shadow', getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-light-switch-shadow'))
+    localStorage.setItem('--ep-light-switch-icon', getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-light-switch-icon'))
+    localStorage.setItem('--ep-light-switch-text', getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-light-switch-text'))
+    localStorage.setItem('--ep-light-text', getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-light-text'))
+    localStorage.setItem('--ep-light-secondary-text', getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-light-secondary-text'))
+    localStorage.setItem('--ep-light-muted-text', getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-light-muted-text'))
+    localStorage.setItem('--ep-light-bg', getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-light-bg'))
+    localStorage.setItem('--ep-light-secondary-bg', getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-light-secondary-bg'))
+    localStorage.setItem('--ep-light-theme', getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-light-theme'))
+    localStorage.setItem('--ep-light-bar', getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-light-bar'))
+    localStorage.setItem('--ep-light-highlight', getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-light-highlight'))
 
-    localStorage.setItem('--dark-switch-shadow', getComputedStyle(document.querySelector(':root')).getPropertyValue('--dark-switch-shadow'))
-    localStorage.setItem('--dark-switch-icon', getComputedStyle(document.querySelector(':root')).getPropertyValue('--dark-switch-icon'))
-    localStorage.setItem('--dark-switch-text', getComputedStyle(document.querySelector(':root')).getPropertyValue('--dark-switch-text'))
-    localStorage.setItem('--dark-text', getComputedStyle(document.querySelector(':root')).getPropertyValue('--dark-text'))
-    localStorage.setItem('--dark-secondary-text', getComputedStyle(document.querySelector(':root')).getPropertyValue('--dark-secondary-text'))
-    localStorage.setItem('--dark-muted-text', getComputedStyle(document.querySelector(':root')).getPropertyValue('--dark-muted-text'))
-    localStorage.setItem('--dark-bg', getComputedStyle(document.querySelector(':root')).getPropertyValue('--dark-bg'))
-    localStorage.setItem('--dark-secondary-bg', getComputedStyle(document.querySelector(':root')).getPropertyValue('--dark-secondary-bg'))
-    localStorage.setItem('--dark-theme', getComputedStyle(document.querySelector(':root')).getPropertyValue('--dark-theme'))
-    localStorage.setItem('--dark-bar', getComputedStyle(document.querySelector(':root')).getPropertyValue('--dark-bar'))
-    localStorage.setItem('--dark-highlight', getComputedStyle(document.querySelector(':root')).getPropertyValue('--dark-highlight'))
+    localStorage.setItem('--ep-dark-switch-shadow', getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-dark-switch-shadow'))
+    localStorage.setItem('--ep-dark-switch-icon', getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-dark-switch-icon'))
+    localStorage.setItem('--ep-dark-switch-text', getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-dark-switch-text'))
+    localStorage.setItem('--ep-dark-text', getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-dark-text'))
+    localStorage.setItem('--ep-dark-secondary-text', getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-dark-secondary-text'))
+    localStorage.setItem('--ep-dark-muted-text', getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-dark-muted-text'))
+    localStorage.setItem('--ep-dark-bg', getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-dark-bg'))
+    localStorage.setItem('--ep-dark-secondary-bg', getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-dark-secondary-bg'))
+    localStorage.setItem('--ep-dark-theme', getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-dark-theme'))
+    localStorage.setItem('--ep-dark-bar', getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-dark-bar'))
+    localStorage.setItem('--ep-dark-highlight', getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-dark-highlight'))
 
-    window.location.href = '../'
+    window.close();
 }
 
 function presetTheme(preset) {
@@ -164,7 +164,7 @@ function presetTheme(preset) {
     let theme = null
     let bar = null
     let highlight = null
-    
+
     if (preset === '~color~') {
         switch_shadow = '#fce477'
         switch_icon = "🌝"
@@ -226,31 +226,31 @@ function presetTheme(preset) {
         bar = '#ffffff'
         highlight = '#0d6efd'
     }
-    
+
     if (localStorage.getItem('switchedTheme') === 'true') {
-        document.querySelector(':root').style.setProperty('--light-switch-shadow',  switch_shadow)
-        document.querySelector(':root').style.setProperty('--light-switch-icon',  '"' + switch_icon + '"')
-        document.querySelector(':root').style.setProperty('--light-switch-text',  '"' + switch_text + '"')
-        document.querySelector(':root').style.setProperty('--light-text',  text)
-        document.querySelector(':root').style.setProperty('--light-secondary-text',  secondary_text)
-        document.querySelector(':root').style.setProperty('--light-muted-text',  muted_text)
-        document.querySelector(':root').style.setProperty('--light-bg',  bg)
-        document.querySelector(':root').style.setProperty('--light-secondary-bg',  secondary_bg)
-        document.querySelector(':root').style.setProperty('--light-theme',  theme)
-        document.querySelector(':root').style.setProperty('--light-bar',  bar)
-        document.querySelector(':root').style.setProperty('--light-highlight',  highlight)
+        document.querySelector(':root').style.setProperty('--ep-light-switch-shadow',  switch_shadow)
+        document.querySelector(':root').style.setProperty('--ep-light-switch-icon',  '"' + switch_icon + '"')
+        document.querySelector(':root').style.setProperty('--ep-light-switch-text',  '"' + switch_text + '"')
+        document.querySelector(':root').style.setProperty('--ep-light-text',  text)
+        document.querySelector(':root').style.setProperty('--ep-light-secondary-text',  secondary_text)
+        document.querySelector(':root').style.setProperty('--ep-light-muted-text',  muted_text)
+        document.querySelector(':root').style.setProperty('--ep-light-bg',  bg)
+        document.querySelector(':root').style.setProperty('--ep-light-secondary-bg',  secondary_bg)
+        document.querySelector(':root').style.setProperty('--ep-light-theme',  theme)
+        document.querySelector(':root').style.setProperty('--ep-light-bar',  bar)
+        document.querySelector(':root').style.setProperty('--ep-light-highlight',  highlight)
     } else {
-        document.querySelector(':root').style.setProperty('--dark-switch-shadow',  switch_shadow)
-        document.querySelector(':root').style.setProperty('--dark-switch-icon',  '"' + switch_icon + '"')
-        document.querySelector(':root').style.setProperty('--dark-switch-text',  '"' + switch_text + '"')
-        document.querySelector(':root').style.setProperty('--dark-text',  text)
-        document.querySelector(':root').style.setProperty('--dark-secondary-text',  secondary_text)
-        document.querySelector(':root').style.setProperty('--dark-muted-text',  muted_text)
-        document.querySelector(':root').style.setProperty('--dark-bg',  bg)
-        document.querySelector(':root').style.setProperty('--dark-secondary-bg',  secondary_bg)
-        document.querySelector(':root').style.setProperty('--dark-theme',  theme)
-        document.querySelector(':root').style.setProperty('--dark-bar',  bar)
-        document.querySelector(':root').style.setProperty('--dark-highlight',  highlight)
+        document.querySelector(':root').style.setProperty('--ep-dark-switch-shadow',  switch_shadow)
+        document.querySelector(':root').style.setProperty('--ep-dark-switch-icon',  '"' + switch_icon + '"')
+        document.querySelector(':root').style.setProperty('--ep-dark-switch-text',  '"' + switch_text + '"')
+        document.querySelector(':root').style.setProperty('--ep-dark-text',  text)
+        document.querySelector(':root').style.setProperty('--ep-dark-secondary-text',  secondary_text)
+        document.querySelector(':root').style.setProperty('--ep-dark-muted-text',  muted_text)
+        document.querySelector(':root').style.setProperty('--ep-dark-bg',  bg)
+        document.querySelector(':root').style.setProperty('--ep-dark-secondary-bg',  secondary_bg)
+        document.querySelector(':root').style.setProperty('--ep-dark-theme',  theme)
+        document.querySelector(':root').style.setProperty('--ep-dark-bar',  bar)
+        document.querySelector(':root').style.setProperty('--ep-dark-highlight',  highlight)
     }
     console.log(preset)
 }
