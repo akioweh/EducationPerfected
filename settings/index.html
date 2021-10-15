@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+
+<!-- SEO Stuff -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <title>Maths Club</title>
+  <meta property="og:type" content="website">
+  <meta name="description" content="CGS Maths Club">
+  <meta name="keywords" content="maths, CGS">
+  <meta name="author" content="Garv Shah">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon.png">
+  <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css">
+  <link rel="stylesheet" href="../assets/css/vanilla-zoom.min.css">
+  <link rel="stylesheet" href="../assets/css/theming.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css"/>
+</head>
+
+<body>
+<input type="checkbox" class="theme-switch" id="theme-switch" /> <!-- This is the button for the checkbox that controls whether it's light or dark mode -->
+<div id="page">
+  <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-white clean-navbar" style="background-color: var(--bar-color) !important; transition: color 0.4s, background-color 0.4s;">
+    <div class="container">
+      <label for="theme-switch" class="switch-label"></label>
+      <button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1" style="border-color: var(--secondary-text-color); color: var(--secondary-text-color)">
+        <span class="visually-hidden" style="display:table;">Toggle navigation</span> <!-- This is a navigation button that appears on screens without enough horizontal space to display the tabs at the top -->
+        <span style="font-size: 200%; display:table-cell;  vertical-align:middle; font-family: Libertine, sans-serif; position:relative; top:-0.1em; line-height: 25px">≡</span>
+        <!-- This was initially an icon, but due to the fact that it couldn't change its colour dynamically, it was replaced with an ascii symbol. The font is there to ensure consistency across platforms -->
+      </button>
+      <div class="collapse navbar-collapse" id="navcol-1">
+        <!-- The tabs for navigation that read to different parts of the site -->
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link active" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" style="color: var(--secondary-text-color); transition: color 0.4s, background-color 0.4s;">Leaderboards</a></li>
+          <li class="nav-item"><a class="nav-link active" href="https://www.youtube.com/watch?v=FtutLA63Cp8" style="color: var(--secondary-text-color); transition: color 0.4s, background-color 0.4s;">Take quiz</a></li>
+          <li class="nav-item"><a class="nav-link active" href="../" style="color: var(--secondary-text-color); transition: color 0.4s, background-color 0.4s;">Home</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <main class="page blog-post-list"> <!-- The main body of the site -->
+    <!-- unlike the main page where all the HTML is loaded in, this page is split into separate rows and columns, each having their own setting -->
+    <section class="clean-block clean-blog-list dark" style="background-color: var(--bg-color); transition: color 0.4s, background-color 0.4s;">
+      <!-- Start of 1st Row (the heading) -->
+      <div class="container">
+        <div class="block-heading">
+          <h2 class="text-info" style="color: var(--theme-color) !important; transition: color 0.4s, background-color 0.4s;">Settings</h2>
+          <p style="color: var(--secondary-text-color); transition: color 0.4s, background-color 0.4s;">Change the theming however you'd like!</p>
+        </div>
+      </div> <!-- End of 1st Row -->
+      <!-- Start of 2nd Row (the colour picker) -->
+      <div class="container" style="background: var(--secondary-bg-color);">
+        <div class="row">
+          <div class="col-auto col-md-6 d-sm-flex d-md-flex flex-fill align-self-center justify-content-sm-end align-items-sm-center justify-content-md-end align-items-md-center" style="margin-top: 50px;margin-bottom: 10px;">
+            <div class="dropdown d-flex d-md-flex justify-content-center align-self-center justify-content-md-center"><button class="btn btn-primary dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="background-color: var(--highlight-color); border-color: var(--bg-color);">What to change?</button>
+              <div class="dropdown-menu dropdown-menu-dark" style="background-color: var(--switch-shadow-color); right: auto; left: 50%; -webkit-transform: translate(-50%, 0); -o-transform: translate(-50%, 0); transform: translate(-50%, 0);">
+                <button class="dropdown-item" type="button" onClick="setSetting('switch-shadow')" style="color: var(--bg-color)">Switch Shadow Colour</button>
+                <button class="dropdown-item" type="button" onClick="setSetting('text')" style="color: var(--bg-color)">Text Colour</button>
+                <button class="dropdown-item" type="button" onClick="setSetting('secondary-text')" style="color: var(--bg-color)">Secondary Text Colour</button>
+                <button class="dropdown-item" type="button" onClick="setSetting('muted-text')" style="color: var(--bg-color)">Muted Text Colour</button>
+                <button class="dropdown-item" type="button" onClick="setSetting('bg')" style="color: var(--bg-color)">Background Colour</button>
+                <button class="dropdown-item" type="button" onClick="setSetting('secondary-bg')" style="color: var(--bg-color)">Secondary Background Colour</button>
+                <button class="dropdown-item" type="button" onClick="setSetting('theme')" style="color: var(--bg-color)">Theme Colour</button>
+                <button class="dropdown-item" type="button" onClick="setSetting('bar')" style="color: var(--bg-color)">Bar Colour</button>
+                <button class="dropdown-item" type="button" onClick="setSetting('highlight')" style="color: var(--bg-color)">Highlight Colour</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-auto col-md-6 d-sm-flex d-md-flex flex-fill align-self-center justify-content-sm-start align-items-sm-center justify-content-md-start align-items-md-center" style="margin-top: 50px;margin-bottom: 10px;"><div class="pickr-container" style="position: relative; overflow: visible; transform: translateY(0); margin: 0; padding: 0;"></div></div>
+        </div>
+      </div><!-- End: 1 Row 2 Columns -->
+      <!-- Start: 1 Row 2 Columns -->
+      <div class="container" style="background: var(--secondary-bg-color);">
+        <div class="row">
+          <div class="col-auto col-md-6 d-sm-flex d-md-flex flex-fill justify-content-sm-end align-items-sm-center justify-content-md-end align-items-md-center" style="margin-top: 10px;margin-bottom: 10px;">
+            <h1 class="d-flex justify-content-end align-items-center" style="font-size: 16.4px;">Dark Mode Label?</h1>
+          </div>
+          <div class="col-auto col-md-6 d-sm-flex d-md-flex flex-fill justify-content-sm-start align-items-sm-center justify-content-md-start align-items-md-center" style="margin-top: 10px;margin-bottom: 10px;">
+            <input class="d-flex justify-content-center align-items-center form-control" type="text" style="font-size: 9px;width: 82px;" placeholder="brocken">
+          </div>
+        </div>
+      </div><!-- End: 1 Row 2 Columns -->
+      <!-- Start: 1 Row 2 Columns -->
+      <div class="container" style="background: var(--secondary-bg-color);">
+        <div class="row">
+          <div class="col-auto col-md-6 d-sm-flex d-md-flex flex-fill justify-content-sm-end align-items-sm-center justify-content-md-end align-items-md-center" style="margin-top: 10px;margin-bottom: 10px;">
+            <h1 class="d-flex justify-content-end align-items-center" style="font-size: 16.4px;">Dark Mode Emoji?</h1>
+          </div>
+          <div class="col-auto col-md-6 d-sm-flex d-md-flex flex-fill justify-content-sm-start align-items-sm-center justify-content-md-start align-items-md-center" style="margin-top: 10px;margin-bottom: 10px;">
+            <input class="d-flex justify-content-center align-items-center form-control" type="text" style="font-size: 9px;width: 82px;" placeholder="brocken">
+          </div>
+        </div>
+      </div><!-- End: 1 Row 2 Columns -->
+      <!-- Start: 1 Row 2 Columns -->
+      <div class="container" style="background: var(--secondary-bg-color);">
+        <div class="row">
+          <div class="col-auto col-md-6 d-sm-flex d-md-flex flex-fill justify-content-sm-end align-items-sm-center justify-content-md-end align-items-md-center" style="margin-top: 10px;margin-bottom: 10px;">
+            <h1 class="d-flex justify-content-end align-items-center" style="font-size: 16.4px;">Light Mode Label?</h1>
+          </div>
+          <div class="col-auto col-md-6 d-sm-flex d-md-flex flex-fill justify-content-sm-start align-items-sm-center justify-content-md-start align-items-md-center" style="margin-top: 10px;margin-bottom: 10px;">
+            <input class="d-flex justify-content-center align-items-center form-control" type="text" style="font-size: 9px;width: 82px;" placeholder="brocken">
+          </div>
+        </div>
+      </div><!-- End: 1 Row 2 Columns -->
+      <!-- Start: 1 Row 2 Columns -->
+      <div class="container" style="background: var(--secondary-bg-color);">
+        <div class="row">
+          <div class="col-auto col-md-6 d-sm-flex d-md-flex flex-fill justify-content-sm-end align-items-sm-center justify-content-md-end align-items-md-center" style="margin-top: 10px;margin-bottom: 10px;">
+            <h1 class="d-flex justify-content-end align-items-center" style="font-size: 16.4px;">Light Mode Emoji?</h1>
+          </div>
+          <div class="col-auto col-md-6 d-sm-flex d-md-flex flex-fill justify-content-sm-start align-items-sm-center justify-content-md-start align-items-md-center" style="margin-top: 10px;margin-bottom: 10px;">
+            <input class="d-flex justify-content-center align-items-center form-control" type="text" style="font-size: 9px;width: 82px;" placeholder="brocken">
+          </div>
+        </div>
+      </div><!-- End: 1 Row 2 Columns -->
+      <!-- Start: 1 Row 1 Column -->
+      <div class="container" style="background: var(--secondary-bg-color);">
+        <div class="row">
+          <div class="col-md-12">
+            <h1 style="text-align: center;margin-top: 20px;">Presets:</h1>
+            <div class="d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center" style="margin-bottom: 50px;">
+              <div class="btn-group" role="group">
+                <button class="btn btn-danger border rounded-pill" type="button" style="font-size: 10px; background-color: #5c3c92; border-color: #5c3c92" onclick="presetTheme('~color~')">~color~</button>
+                <button class="btn btn-danger border rounded-pill" type="button" style="font-size: 10px; background-color: #3C415C; border-color: #3C415C" onclick="presetTheme('calm dusk')">calm dusk</button>
+                <button class="btn btn-danger border rounded-pill" type="button" style="font-size: 10px; background-color: #E94560; border-color: #E94560" onclick="presetTheme('twilight')">twilight</button>
+                <button class="btn btn-danger border rounded-pill" type="button" style="font-size: 10px; background-color: #5CDB95; border-color: #5CDB95" onclick="presetTheme('tree frog')">tree frog</button>
+                <button class="btn btn-danger border rounded-pill" type="button" style="font-size: 10px; background-color: #0d6efd; border-color: #0d6efd" onclick="presetTheme('corporate minimalism')">corporate minimalism</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- End: 1 Row 1 Column -->
+      <div class="container" style="background: var(--secondary-bg-color);">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center" style="margin-bottom: 10px;">
+              <button class="btn btn-success btn-lg" type="button" style="font-size: 18px;margin-top: 10px;margin-bottom: 30px; background-color: var(--highlight-color); border-color: var(--highlight-color);" onClick="save()">Save</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- End: 1 Row 1 Column -->
+    </section>
+  </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
+<script src="../assets/js/vanilla-zoom.js"></script>
+<script src="../assets/js/theme.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
+<script src="../assets/js/settings.js"></script>
+
+<script>
+  // This code is only used to remember theme selection between page loads
+  const themeSwitch = document.querySelector('.theme-switch');
+  themeSwitch.checked = localStorage.getItem('switchedTheme') === 'true';
+
+  themeSwitch.addEventListener('change', function(e) {
+    if (e.currentTarget.checked === true) {
+      // Add item to localstorage
+      localStorage.setItem('switchedTheme', 'true');
+    } else {
+      // Remove item if theme is switched back to normal
+      localStorage.removeItem('switchedTheme');
+    }
+  });
+</script>
+
+<script>setSetting('bg')</script>
+
+</body>
+
+</html>

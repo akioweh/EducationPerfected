@@ -1,0 +1,110 @@
+:root {
+    /* Light mode */
+    --light-switch-shadow: #373d4e;
+    --light-switch-icon: "🌚";
+    --light-switch-text: "lights off?";
+    --light-text: #212529;
+    --light-secondary-text: #6c757d;
+    --light-muted-text: #000000;
+    --light-bg: #f7f7f7;
+    --light-secondary-bg: #fff;
+    --light-theme: #3b99e0;
+    --light-bar: #ffffff;
+    --light-highlight: #0d6efd;
+
+    /* Dark mode */
+    --dark-switch-shadow: #fce477;
+    --dark-switch-icon: "🌝";
+    --dark-switch-text: "lights on?";
+    --dark-text: #dedad6;
+    --dark-secondary-text: #487dc4;
+    --dark-muted-text: #ffffff;
+    --dark-bg: #1A1A2E;
+    --dark-secondary-bg: #16213E;
+    --dark-theme: #E94560;
+    --dark-bar: #16213E;
+    --dark-highlight: #E94560;
+
+
+
+    /* Default mode */
+    --switch-shadow-color: var(--dark-switch-shadow);
+    --switch-icon: var(--dark-switch-icon);
+    --switch-text: var(--dark-switch-text);
+    --text-color: var(--dark-text);
+    --secondary-text-color: var(--dark-secondary-text);
+    --muted-text-color: var(--dark-muted-text);
+    --bg-color: var(--dark-bg);
+    --secondary-bg-color: var(--dark-secondary-bg);
+    --theme-color: var(--dark-theme);
+    --bar-color: var(--dark-bar);
+    --highlight-color: var(--dark-highlight);
+}
+
+@font-face {
+    font-family: Libertine;
+    src: url(../fonts/LinLibertine.ttf);
+}
+
+/* Switched mode */
+.theme-switch:checked ~ #page {
+    --switch-shadow-color: var(--light-switch-shadow);
+    --switch-icon: var(--light-switch-icon);
+    --switch-text: var(--light-switch-text);
+    --text-color: var(--light-text);
+    --secondary-text-color: var(--light-secondary-text);
+    --muted-text-color: var(--light-muted-text);
+    --bg-color: var(--light-bg);
+    --secondary-bg-color: var(--light-secondary-bg);
+    --theme-color: var(--light-theme);
+    --bar-color: var(--light-bar);
+    --highlight-color: var(--light-highlight);
+}
+
+/* Theme switcher */
+.theme-switch { /* Hides the checkbox */
+    position: absolute !important;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+}
+
+.switch-label {
+    cursor: pointer;
+    display: flex;
+}
+
+.switch-label::before {
+    content: var(--switch-icon);
+    font-size: 40px;
+    transition: text-shadow 0.3s;
+}
+
+.switch-label::after {
+    align-self: center;
+    content: var(--switch-text);
+    color: var(--switch-shadow-color);
+    font-size: clamp(min(2vw, 32px), 28px, 4.5vw);
+    line-height: 40px;
+    opacity: 0;
+    padding-left: 15px;
+    transition: opacity 0.3s;
+}
+
+.theme-switch:focus ~ #page .switch-label::before,
+.switch-label:hover::before {
+    text-shadow: 0 0 15px var(--switch-shadow-color);
+}
+
+.theme-switch:focus ~ #page .switch-label::after,
+.switch-label:hover::after {
+    opacity: 1;
+}
+
+#page {
+    background: var(--bg-color);
+    color: var(--text-color);
+    min-height: 100%;
+    transition: color .4s, background-color .4s;
+}
