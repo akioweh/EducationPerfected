@@ -96,12 +96,14 @@ document.querySelector('#page > main > section > div:nth-child(3) > div > div.co
 document.querySelector('#page > main > section > div:nth-child(4) > div > div.col-auto.col-md-6.d-sm-flex.d-md-flex.flex-fill.justify-content-sm-start.align-items-sm-center.justify-content-md-start.align-items-md-center > input').placeholder = getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-dark-switch-icon').replace(/"/g,'')
 document.querySelector('#page > main > section > div:nth-child(5) > div > div.col-auto.col-md-6.d-sm-flex.d-md-flex.flex-fill.justify-content-sm-start.align-items-sm-center.justify-content-md-start.align-items-md-center > input').placeholder = getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-light-switch-text').replace(/"/g,'')
 document.querySelector('#page > main > section > div:nth-child(6) > div > div.col-auto.col-md-6.d-sm-flex.d-md-flex.flex-fill.justify-content-sm-start.align-items-sm-center.justify-content-md-start.align-items-md-center > input').placeholder = getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-light-switch-icon').replace(/"/g,'')
+document.querySelector('#page > main > section > div:nth-child(8) > div > div.col-auto.col-md-6.d-sm-flex.d-md-flex.flex-fill.justify-content-sm-start.align-items-sm-center.justify-content-md-start.align-items-md-center > input').placeholder = getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-delay').replace(/"/g,'')
 
 function save() {
     let dark_switch_text = document.querySelector('#page > main > section > div:nth-child(3) > div > div.col-auto.col-md-6.d-sm-flex.d-md-flex.flex-fill.justify-content-sm-start.align-items-sm-center.justify-content-md-start.align-items-md-center > input')
     let dark_switch_icon = document.querySelector('#page > main > section > div:nth-child(4) > div > div.col-auto.col-md-6.d-sm-flex.d-md-flex.flex-fill.justify-content-sm-start.align-items-sm-center.justify-content-md-start.align-items-md-center > input')
     let light_switch_text = document.querySelector('#page > main > section > div:nth-child(5) > div > div.col-auto.col-md-6.d-sm-flex.d-md-flex.flex-fill.justify-content-sm-start.align-items-sm-center.justify-content-md-start.align-items-md-center > input')
     let light_switch_icon = document.querySelector('#page > main > section > div:nth-child(6) > div > div.col-auto.col-md-6.d-sm-flex.d-md-flex.flex-fill.justify-content-sm-start.align-items-sm-center.justify-content-md-start.align-items-md-center > input')
+    let delay = document.querySelector('#page > main > section > div:nth-child(8) > div > div.col-auto.col-md-6.d-sm-flex.d-md-flex.flex-fill.justify-content-sm-start.align-items-sm-center.justify-content-md-start.align-items-md-center > input')
 
     if (dark_switch_text.value !== "") {
         console.log(dark_switch_text.value)
@@ -122,6 +124,11 @@ function save() {
     if (light_switch_icon.value !== "") {
         document.querySelector(':root').style.setProperty('--ep-light-switch-icon', '"' + light_switch_icon.value + '"')
         light_switch_icon.placeholder = light_switch_icon.value
+    }
+
+    if (delay.value !== "") {
+        document.querySelector(':root').style.setProperty('--ep-delay', '"' + delay.value + '"')
+        delay.placeholder = delay.value
     }
 
     localStorage.setItem('--ep-light-switch-shadow', getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-light-switch-shadow'))
@@ -147,6 +154,8 @@ function save() {
     localStorage.setItem('--ep-dark-theme', getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-dark-theme'))
     localStorage.setItem('--ep-dark-bar', getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-dark-bar'))
     localStorage.setItem('--ep-dark-highlight', getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-dark-highlight'))
+
+    localStorage.setItem('--ep-delay', getComputedStyle(document.querySelector(':root')).getPropertyValue('--ep-delay'))
 
     window.close();
 }

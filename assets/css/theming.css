@@ -39,6 +39,9 @@
     --ep-theme-color: var(--ep-dark-theme);
     --ep-bar-color: var(--ep-dark-bar);
     --ep-highlight-color: var(--ep-dark-highlight);
+
+    /*EP Settings*/
+    --ep-delay: 0;
 }
 
 @font-face {
@@ -59,6 +62,9 @@
     --ep-theme-color: var(--ep-light-theme);
     --ep-bar-color: var(--ep-light-bar);
     --ep-highlight-color: var(--ep-light-highlight);
+
+    /*EP Settings*/
+    --ep-delay: 0;
 }
 
 /* Theme switcher */
