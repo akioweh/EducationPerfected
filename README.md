@@ -1,5 +1,5 @@
 # EducationPerfected
-In Grade 7, I created a script for Education Perfect which would automatically answer questions for me, which I made when I was competeing with a friend to get points on the app. A few years later, I remebered the project and wanted to see if anybody had created anything similar to me. The only thing I was able to find was the script that Ken had created, which had a few pros compared to mine, but also a major con:
+In Grade 7, I created a script for Education Perfect which would automatically answer questions for me, which I made when I was competing with a friend to get points on the app. A few years later, I remembered the project and wanted to see if anybody had created anything similar to me. The only thing I was able to find was the script that Ken had created, which had a few pros compared to mine, but also a major con:
 
 | Pros                                                                                                                                                                  | Cons                                                                          |
 |-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
