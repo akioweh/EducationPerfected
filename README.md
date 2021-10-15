@@ -1,31 +1,7 @@
 # EducationPerfected
-JS script to automatically answer Education Perfect language questions.  
-Works for word-word tasks and dash as well.  
+In Grade 7, I created a script for Education Perfect which would automatically answer questions for me, which I made when I was competeing with a friend to get points on the app. A few years later, I remebered the project and wanted to see if anybody had created anything similar to me. The only thing I was able to find was the script that Ken had created, which had a few pros compared to mine, but also a major con:
 
-## Usage  
-### Loading/installing the script  
-__There are two methods of loading this script with the same functionality__:
- - **Plain script**: Load by copying and pasting the contents of the `script.js` file into your browser's inspect mode console (for example ctrl-shift-i on chrome)  
-
- - **Tampermonkey browser extension script**: Tampermonkey is a browser extension available for Edge, Chrome, etc. It automatically loads the script on the Education Perfect website, so you won't have to open the console and paste each time. Install by copying and pasting the contents of the `script.js` file into a new script file (delete any template code in there) in the extension's dashboard, and press `ctrl/cmd + s` to save. After it is saved it should automatically load on the website, and the hotkeys should work.  
-*Link to Tampermonkey Extension: https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo*
-
-### Load Word/Answer List (`Alt + R`)
-Before each task, Education Perfect provides a list of words and corresponding translations. This script utilizes the information from that screen to learn the answers for each question.  
-**For it to correctly answer all questions, make sure to press `Alt + R` on the word list screen before each new task to refresh the word list. Also note that for large lists sometimes the whole page doesn't load, so you need to scroll through all the questions first.**
-
-### Semi-Manual Answer (`Alt + A`)
-Finds answers for each question and copies it to your clipboard. You can then simply press `ctrl/cmd + v` to paste it into the answer box. Press `Alt + A` in the questions screen to start the auto-answering.  
-
-### Fully-Auto Answer (`Alt + S`)
-(Thanks to Garv)  
-By using `Alt + S`, it will fully-automatically answer and submit all questions (how wonderful!) It should ask you for a time interval (in milliseconds) at which it answers the questions (if you make this too low then it will submit before it has the chance to answer, and will subsequently fail; 100 is recommended), after which it will just answer through them until you either stop it again (Alt + S), or the list finishes.
-
-### Hotkeys  
-Alt + R refreshes question/answer list (When on the page with the word list)  
-Alt + A starts the clipboard auto answer (When on the question page)  
-Alt + S answers the questions at a one-second interval each (When on the question page)  
-
-## To Do:  
-- [X] Make the program learn from its mistakes
-- [ ] Create a salter (makes it so the interval between answering the questions isn't consistent)  
+| Pros      | Cons |
+| ----------- | ----------- |
+| Ken's version was a lot more usable. Mine utilised functions in the developer console, while his was packages into a simple userscript with hotkeys| My script had the ability to automatically answer questions, which his didn't |
+| Ken's version was "semi-automatic", where'd you'd have to manually use ctrl-v to paste in the answer. It's quite nice to have both semi-automatic and automatic modes |        |
