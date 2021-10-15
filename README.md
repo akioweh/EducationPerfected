@@ -4,4 +4,4 @@ In Grade 7, I created a script for Education Perfect which would automatically a
 | Pros      | Cons |
 | ----------- | ----------- |
 | Ken's version was a lot more usable. Mine utilised functions in the developer console, while his was packages into a simple userscript with hotkeys| My script had the ability to automatically answer questions, which his didn't |
-| Ken's version was "semi-automatic", where'd you'd have to manually use ctrl-v to paste in the answer. It's quite nice to have both semi-automatic and automatic modes |        |
+| Ken's version was "semi-automatic", where'd you'd have to manually use ctrl-v to paste in the answer. It's quite nice to have both semi-automatic and automatic modes |
