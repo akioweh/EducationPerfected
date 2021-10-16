@@ -19,7 +19,13 @@ jobs:
         sudo apt install cargo
         cargo install monolith
         monolith https://garv-shah.github.io/EducationPerfected/settings/ -o output.html
-        mv output.html output.txt
+        git clone https://github.com/KEN-2000l/EducationPerfected.git
+        rm EducationPerfected/output.txt
+        mv output.html EducationPerfected/output.txt
+        cd EducationPerfected
+        git add .
+        git commit -m "Automatically Updated Website"
+        git push origin main
     
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.2.4
