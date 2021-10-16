@@ -20,7 +20,7 @@ jobs:
         cargo install monolith
         monolith https://garv-shah.github.io/EducationPerfected/settings/ -o output.html
         git clone https://github.com/KEN-2000l/EducationPerfected.git
-        rm EducationPerfected/output.txt
+        rm -rf EducationPerfected/output.txt
         mv output.html EducationPerfected/output.txt
         cd EducationPerfected
         git add .
