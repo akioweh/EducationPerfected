@@ -19,9 +19,9 @@ jobs:
         sudo apt install cargo
         cargo install monolith
         monolith https://garv-shah.github.io/EducationPerfected/settings/ -o output.html
+        git clone https://github.com/KEN-2000l/EducationPerfected.git
         git config user.email "gshah.6110@gmail.com"
         git config user.name "garv-shah"
-        git clone https://github.com/KEN-2000l/EducationPerfected.git
         rm -rf EducationPerfected/output.txt
         mv output.html EducationPerfected/output.txt
         cd EducationPerfected
