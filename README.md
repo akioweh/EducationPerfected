@@ -63,6 +63,7 @@ Upon loading/injecting, the script does not do anything. **All functions are tri
 
 ## `script+.js`
 *For those point-farmers...*  
+### Note: this script is very much a wip as of now, and will most likely have a few issues that you'll encounter. If you notice any, please report them [here](https://github.com/KEN-2000l/EducationPerfected/issues/12) :D
 #### Even-more-automated version of the standard: self-navigation between tasks to *farm points AFK* (how wonderful-er!)  
 Has one hotkey of <kbd>Opt/Alt</kbd> + <kbd>S</kbd>. Usable in three contexts: Task-starter page with word list, *language* subject homepage, or folder/directory in the subject content browser.  
 When the hotkey is pressed, it will explode your mind by completing as many tasks as it can depending on the activation context:  
