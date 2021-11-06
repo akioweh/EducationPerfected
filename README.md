@@ -1,7 +1,7 @@
 # EducationPerfected
 #### Javascript user-script to automatically answer Education Perfect language questions.  
 Works for word-word (translation) tasks and Dash mode.  
-**Does not work with Audio-tasks, YET.**  <br>
+**Does not work with Audio-tasks, YET.**  <br><br>
 Probably don't use Script+ yet :P
   
 ###### *P.S. guys pls stop farming points to steal my top ranking on the Global leaderboard smhsmhsmh*  
