@@ -1,4 +1,4 @@
-<!-- Saved from https://garv-shah.github.io/EducationPerfected/settings/ at 2022-01-01T23:22:20Z using monolith v2.6.1 -->
+<!-- Saved from https://garv-shah.github.io/EducationPerfected/settings/ at 2022-01-01T23:27:30Z using monolith v2.6.1 -->
 <!DOCTYPE html><html><!-- SEO Stuff --><head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
