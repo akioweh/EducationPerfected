@@ -1,9 +1,7 @@
 // ==UserScript==
 // @name         Education Perfected (Auto-Answer)
 // @namespace    http://tampermonkey.net/
-// @version      1.1.5
-// @updateURL    https://raw.githubusercontent.com/KEN-2000l/EducationPerfected/main/script.js
-// @downloadURL  https://raw.githubusercontent.com/KEN-2000l/EducationPerfected/main/script.js
+// @version      0
 // @description  Auto-answer Education Perfect Tasks at HIGH Speeds
 // @author       KEN_2000, Garv
 // @match        *://*.educationperfect.com/*
