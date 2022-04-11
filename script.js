@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Education Perfected (Auto-Answer)
 // @namespace    http://tampermonkey.net/
-// @version      1.1.5
+// @version      1.1.6
 // @updateURL    https://raw.githubusercontent.com/KEN-2000l/EducationPerfected/main/script.js
 // @downloadURL  https://raw.githubusercontent.com/KEN-2000l/EducationPerfected/main/script.js
 // @description  Auto-answer Education Perfect Tasks at HIGH Speeds
@@ -45,7 +45,7 @@
     }
 
     async function submitButton() {
-        let explanation = document.querySelector("button#explanation-button");
+        let explanation = document.getElementById('submit-button');
         if (explanation) return explanation;
         console.log("didn't find hax button");
         return document.querySelector("button.submit-button");
@@ -87,7 +87,7 @@
         let failCount = 0;
         while (semiTOGGLE || autoTOGGLE) {
             try {
-                let question = document.querySelector("#question-text").innerText;
+                let question = document.getElementById("question-text").innerText;
                 let answer = findAnswer(question);
                 if (answer === undefined) console.log("no answer found");
                 answerSub = answer
