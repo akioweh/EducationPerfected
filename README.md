@@ -4,7 +4,8 @@ Works for word-word (translation) tasks and Dash mode.
 **Does not work with Audio-tasks, YET.**  <br><br>
 Probably don't use Script+ yet :P
   
-###### *P.S. guys pls stop farming points to steal my top ranking on the Global leaderboard smhsmhsmh*  
+###### *we do not condone the usage of this tool for cheating, it is simply a proof of concept and is being used to push EP to create better anti-cheat software*  
+###### **as of now, the script is not being updated anymore, some features will not work**  
 
 ![example image](result.png)
 
@@ -51,7 +52,7 @@ Upon loading/injecting, the script does not do anything. **All functions are tri
 ### Extras
 #### Feature-Explanation
   - **Full Speed Auto Answer:**  
-    The current speed is the maximum we can acheive so far. It will probably not be possible to go faster without a different concept.  
+    The current speed is the maximum achievable so far. It will probably not be possible to go faster without a different concept.  
     
   - **Self-Learning/Error Correction:**  
     When an error is made (due to bad question/answer parsing, lag, or missing word list), the script handles the popup and extracts the corret answer information to stop making the same mistake again (hopefully).  
@@ -63,9 +64,9 @@ Upon loading/injecting, the script does not do anything. **All functions are tri
 
 
 ## `script+.js`
-*For those point-farmers...*  
+*In Beta*  
 ### Note: this script is very much a wip as of now, and will most likely have a few issues that you'll encounter. If you notice any, please report them [here](https://github.com/KEN-2000l/EducationPerfected/issues/12) :D
-#### Even-more-automated version of the standard: self-navigation between tasks to *farm points AFK* (how wonderful-er!)  
+#### Even-more-automated version of the standard: self-navigation between tasks to run AFK  
 Has one hotkey of <kbd>Opt/Alt</kbd> + <kbd>S</kbd>. Usable in three contexts: Task-starter page with word list, *language* subject homepage, or folder/directory in the subject content browser.  
 When the hotkey is pressed, it will explode your mind by completing as many tasks as it can depending on the activation context:  
   - Subject homepage => everything in the subject
