@@ -5,7 +5,7 @@ Works for word-word (translation) tasks and Dash mode.
 Probably don't use Script+ yet :P
   
 ###### *we do not condone the usage of this tool for cheating, it is simply a proof of concept and is being used to push EP to create better anti-cheat software*  
-###### **as of now, the script is not being updated anymore, some features will not work**  
+###### **an existing exploit used by the automatic-answering mode has been patched by EP; fully-auto answering doesn't work anymore**  
 
 ![example image](result.png)
 
