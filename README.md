@@ -1,9 +1,9 @@
 # EducationPerfected
-#### Javascript user-script to automatically answer Education Perfect language questions.  
+#### Javascript user-script to automatically answer Education Perfect language questions at **high** speeds.  
 Works for word-word (translation) tasks and Dash mode.  
 **Does not work with Audio-tasks, YET.**  <br><br>
 
-### **Read this then read the README inside v2 folder**
+### **Read this then read the README inside v2 folder [here](https://github.com/KEN-2000l/EducationPerfected/tree/main/v2)**
 
 ![example image](result.png)
 
@@ -62,7 +62,7 @@ Upon loading/injecting, the script does not do anything. **All functions are tri
 
 
 ## `script+.js`
-*In Beta*  
+*In Beta; currently broken*  
 ### Note: this script is very much a wip as of now, and will most likely have a few issues that you'll encounter. If you notice any, please report them [here](https://github.com/KEN-2000l/EducationPerfected/issues/12) :D
 #### Even-more-automated version of the standard: self-navigation between tasks to run AFK  
 Has one hotkey of <kbd>Opt/Alt</kbd> + <kbd>S</kbd>. Usable in three contexts: Task-starter page with word list, *language* subject homepage, or folder/directory in the subject content browser.  
@@ -71,12 +71,5 @@ When the hotkey is pressed, it will explode your mind by completing as many task
   - Content browser => everything within the current folder
   - Task-starter page => this task
 
-
-### To Do  
-- [X] Make the program learn from its mistakes
-- [X] Make auto-answer even faster
-- [X] Full auto mode to navigate between tasks to farm points AFK (`script+.js`)
-- [ ] Compatibility with Audio-based tasks
-- [ ] Pretend to be a human?? (Such as a salter)  
 
 #### *By [Garv](https://github.com/garv-shah) and [KEN_2000](https://github.com/KEN-2000l)*
