@@ -1,6 +1,7 @@
 # V2 with fixed auto-answer
 
 ### similar functionality as v1, but with a different approach to restore full-auto-answering feature  
+read the main readme [here](https://github.com/KEN-2000l/EducationPerfected#readme) first!!  
 hotkeys is same as v1. There are no alert pop-ups when you press they hotkeys though; you only get a message in console output. There is also no semi-automatic mode (alt a).  
   
 **the script is no longer a userscript** (one that can be run by simply pasting into DevTools console)  
