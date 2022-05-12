@@ -17,7 +17,7 @@ therefore, installation and execution is different.
 there are different ways to run the script using Node.js, but a simple way is to open up terminal and type `node [path to file]`  
 e.g. `node C:\index.js`  
 (for windows) if you are really lazy, download and save the `start.cmd` file in the same folder as `index.js` and double click `start.cmd` to run  
-idk mac
+on macos it's just easier to run the above command
 
 ## Expected behavior  
 when you run the script, it should open a new browser window (that does not have any user data so you must log in to EP manually or fill in your details in the script for auto-login)  
