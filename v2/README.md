@@ -11,16 +11,16 @@ therefore, installation and execution is different.
 ## Installation & how to run  
 1. install node.js from https://nodejs.org/en/
 2. instapp the Puppeteer library by opening terminal/cmd and typing `npm i puppeteer`
-3. download the script (edit it using notepad to fill in your EP log in details at line 48 if you want auto-login; see below)
-4. run the script (`index.js`) using node
+3. download the script (`index.js` found above) (edit it using notepad to fill in your EP log in details at line 48 if you want auto-login; see below)
+4. run the script (`index.js`) using Node.js...  
 
 there are different ways to run the script using Node.js, but a simple way is to open up terminal and type `node [path to file]`  
 e.g. `node C:\index.js`  
 (for windows) if you are really lazy, download and save the `start.cmd` file in the same folder as `index.js` and double click `start.cmd` to run  
-idk mac
+on macos it's just easier to run the above command
 
 ## Expected behavior  
-when you run the script, it should open a new browser window (that does not have any user data so you must log in to EP manually or fill in your details in the script for auto-login)  
+when you run the script, it should open a new browser window (that does not have any user data so you must log in to EP manually. Alternatively, fill in your details in the script at line 48 for auto-login)  
 education perfect website will load as normal  
 nagivate through EP as normal  
 the auto-answer functionality is loaded in the background  
