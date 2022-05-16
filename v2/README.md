@@ -22,7 +22,7 @@ on macos it's just easier to run the above command
 ## Expected behavior  
 when you run the script, it should open a new browser window (that does not have any user data so you must log in to EP manually. Alternatively, fill in your details in the script at line 48 for auto-login)  
 education perfect website will load as normal  
-nagivate through EP as normal  
+navigate through EP as normal  
 the auto-answer functionality is loaded in the background  
 trigger the functions in the same manner as V1 using the same hotkeys (read the readme on the main page)  
 _if you close the terminal window running the script the browser window will close too_
