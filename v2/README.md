@@ -17,7 +17,9 @@ therefore, installation and execution is different.
 there are different ways to run the script using Node.js, but a simple way is to open up terminal and type `node [path to file]`  
 e.g. `node C:\index.js`  
 (for windows) if you are really lazy, download and save the `start.cmd` file in the same folder as `index.js` and double click `start.cmd` to run  
-on macos it's just easier to run the above command
+on macos it's just easier to run the above command  
+
+NOTE: if puppeteer complains about lack of chromium browser the first time you run it, open up terminal and run `node node_modules/puppeteer/install.js` to manually install the bundeled chromium. 
 
 ## Expected behavior  
 when you run the script, it should open a new browser window (that does not have any user data so you must log in to EP manually. Alternatively, fill in your details in the script at line 48 for auto-login)  
