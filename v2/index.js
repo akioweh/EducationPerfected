@@ -1,9 +1,12 @@
-// v1.0
+// v1.2
 
 const puppeteer = require('puppeteer');
 
 (async () => {
     const DIR = {
+		YOUR_EMAIL: 'YOUR EMAIL',
+		YOUR_PASSWORD: 'YOUR PASSWORD',
+		
         login_url: 'https://app.educationperfect.com/app/login',
 
         // log-in page elements
@@ -32,13 +35,8 @@ const puppeteer = require('puppeteer');
         continue_button_css: 'button#continue-button',
     }
 
-    // specify chrome version
-    const browserFetcher = puppeteer.createBrowserFetcher()
-    const revisionInfo = await browserFetcher.download('991974');
-
     // launch browser
     puppeteer.launch({
-        executablePath: revisionInfo.executablePath,
         headless: false,
         defaultViewport: null,
         handleSIGINT: false
@@ -51,8 +49,8 @@ const puppeteer = require('puppeteer');
             await page.waitForSelector(DIR.username_css);
 
             // FILL IN YOUR DETAILS HERE TO LOG IN AUTOMATICALLY
-            await page.type(DIR.username_css, 'YOUR EMAIL');
-            await page.type(DIR.password_css, 'YOUR PASSWORD');
+            await page.type(DIR.username_css, DIR.YOUR_EMAIL);
+            await page.type(DIR.password_css, DIR.YOUR_PASSWORD);
             await page.click(DIR.login_button_css);
 
             await page.waitForSelector(DIR.start_button_css, {timeout: 0});
@@ -152,7 +150,7 @@ const puppeteer = require('puppeteer');
                 answer = cutDict[cleanString(question)];
                 if (answer) return answer;
                 console.log(`No answer found for ${question}`);
-                return undefined;
+                return "idk answer";
             }
 
             // main function that continually answers questions until completion modal pops up or hotkey pressed again
@@ -191,6 +189,7 @@ const puppeteer = require('puppeteer');
                 }
 
                 await deleteModals();
+				TOGGLE = false;
                 console.log('answerLoop Exited.');
             }
 
