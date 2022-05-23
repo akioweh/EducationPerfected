@@ -11,7 +11,7 @@ therefore, installation and execution is different.
 ## Installation & how to run  
 1. install node.js from https://nodejs.org/en/
 2. instapp the Puppeteer library by opening terminal/cmd and typing `npm i puppeteer`
-3. download the script (`index.js` found above) (edit it using notepad to fill in your EP log in details at line 48 if you want auto-login; see below)
+3. download the script (`index.js` found above) (edit it using notepad to fill in your **EP log in** details at **line 7** if you want auto-login; see below)
 4. run the script (`index.js`) using Node.js...  
 
 there are different ways to run the script using Node.js, but a simple way is to open up terminal and type `node [path to file]`  
