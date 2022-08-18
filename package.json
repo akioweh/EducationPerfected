@@ -1,7 +1,0 @@
-{
-  "name": "EducationPerfected",
-  "version": "1.0.0",
-  "dependencies": {
-    "puppeteer": "^14.0.0"
-  }
-}
