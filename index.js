@@ -1,12 +1,12 @@
-// v1.2
+// v1.4
 
 const puppeteer = require('puppeteer');
 
 (async () => {
     const DIR = {
-		YOUR_EMAIL: 'YOUR EMAIL',
-		YOUR_PASSWORD: 'YOUR PASSWORD',
-		
+		email: 'YOUR EMAIL',  // replace YOUR EMAIL with your email for auto login (keep everything else the same)
+		password: 'YOUR PASSWORD',  // replace YOUR PASSWORD with your password for auto login
+
         login_url: 'https://app.educationperfect.com/app/login',
 
         // log-in page elements
@@ -44,23 +44,25 @@ const puppeteer = require('puppeteer');
         .then(async browser => {
             const page = (await browser.pages())[0];
 
-            // open EP page and log in
+            // Open EP page and log in
             await page.goto(DIR.login_url);
             await page.waitForSelector(DIR.username_css);
 
-            // FILL IN YOUR DETAILS HERE TO LOG IN AUTOMATICALLY
-            await page.type(DIR.username_css, DIR.YOUR_EMAIL);
-            await page.type(DIR.password_css, DIR.YOUR_PASSWORD);
+            // THIS FILLS IN YOUR DETAILS TO LOG IN AUTOMATICALLY
+            await page.type(DIR.username_css, DIR.email);
+            await page.type(DIR.password_css, DIR.password);
             await page.click(DIR.login_button_css);
 
             await page.waitForSelector(DIR.start_button_css, {timeout: 0});
 
 
-            // auto-answer code starts here
+            // ===== Auto-answer code starts here ===== //
             let TOGGLE = false;
+            let ENTER = true;
             let fullDict = {};
             let cutDict = {};
 
+            // Basic answer-parsing
             function cleanString(string) {
                 return String(string)
                     .replace(/\([^)]*\)/g, "").trim()
@@ -69,6 +71,7 @@ const puppeteer = require('puppeteer');
                     .split("|")[0].trim();
             }
 
+            // Get words from the main task page
             async function wordList(selector) {
                 return await page.$$eval(selector, els => {
                     let words = [];
@@ -77,6 +80,7 @@ const puppeteer = require('puppeteer');
                 });
             }
 
+            // Refreshes the world lists on the main task page to enhance our vocabulary
             async function refreshWords() {
                 const l1 = await wordList(DIR.baseList_css);
                 const l2 = await wordList(DIR.targetList_css);
@@ -86,11 +90,13 @@ const puppeteer = require('puppeteer');
                     cutDict[cleanString(l2[i])] = cleanString(l1[i]);
                     cutDict[cleanString(l1[i])] = cleanString(l2[i]);
                 }
-                console.log('Word Lists Refreshed.')
+                console.log('Word Lists Refreshed.');
+                await alert('Word Lists Refreshed.');
             }
 
 
             // extracts what (EP detected as) the user typed, from the fancy multicolored display
+            // appended to logs for debugging/self-learning purposes
             async function getModalAnswered() {
                 return await page.$$eval('td#users-answer-field > *', el => {
                     let answered = '';
@@ -101,6 +107,7 @@ const puppeteer = require('puppeteer');
                 });
             }
 
+            // Learn from the mistakes :)
             async function correctAnswer(question, answer) {
                 // wait until modal content is fully loaded
                 await page.waitForFunction((css) => {
@@ -120,6 +127,7 @@ const puppeteer = require('puppeteer');
                 // update/correct answer dictionary
                 fullDict[question] = modalCutAnswer;
 
+                // logging for debugging if needed
                 let log = "===== Details after Incorrect Answer: =====\n"
                 log = log + `Detected Question: \n => ${question}\n`;
                 log = log + `Inputted Answer: \n => ${answer}\n\n`;
@@ -165,8 +173,8 @@ const puppeteer = require('puppeteer');
                     let answer = findAnswer(question);
 
                     await page.click(DIR.answer_box_css, {clickCount: 3});
-                    page.keyboard.sendCharacter(answer);
-                    page.keyboard.press('Enter');
+                    await page.keyboard.sendCharacter(answer);
+                    ENTER && page.keyboard.press('Enter');
 
                     // special case: modal pops up
                     if (await page.$(DIR.modal_css)) {
@@ -194,7 +202,7 @@ const puppeteer = require('puppeteer');
             }
 
             // takes care of answerLoop toggling logic
-            function toggle() {
+            async function toggleLoop() {
                 if (TOGGLE) {
                     TOGGLE = false;
                     console.log("Stopping answerLoop.");
@@ -207,14 +215,28 @@ const puppeteer = require('puppeteer');
                 }
             }
 
-            function print(key) {
-                console.log(key);
+            async function toggleAuto() {
+                if (ENTER) {
+                    ENTER = false;
+                    console.log("Switched to semi-auto mode.");
+                    await alert("Switched to semi-auto mode.");
+                } else {
+                    ENTER = true;
+                    console.log("Switched to auto mode.");
+                    await alert("Switched to auto mode.");
+                }
             }
 
-            await page.exposeFunction('refresh', refreshWords);
-            await page.exposeFunction('start', toggle);
-            await page.exposeFunction('print', print);
+            async function alert(msg) {
+                await page.evaluate(m=> window.alert(m), msg);
+            }
 
+            // Expose API functions to the page (for hotkey event listeners to call)
+            await page.exposeFunction('refresh', refreshWords);
+            await page.exposeFunction('startAnswer', toggleLoop);
+            await page.exposeFunction('toggleMode', toggleAuto);
+
+            // Add event listeners for hotkeys ON the page
             await page.evaluate(() => {
                 document.addEventListener("keyup", async (event) => {
                     let key = event.key.toLowerCase();
@@ -222,7 +244,9 @@ const puppeteer = require('puppeteer');
                         if ((event.altKey && key === "r") || (key === "®")) {
                             await window.refresh();
                         } else if ((event.altKey && key === "s") || (key === "ß")) {
-                            window.start();
+                            await window.startAnswer();
+                        } else if ((event.altKey && key === "a") || (key === "å")) {
+                            await window.toggleMode();
                         }
                     }
                 });
