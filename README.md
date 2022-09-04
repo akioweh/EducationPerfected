@@ -123,7 +123,7 @@ Then, you can:
 * At appropriate pages (task starter, task page), use the hotkeys to answer questions.
 
 When auto-answering is triggered, it should:
-* Immediately start grinding through questions 3-20+ questions per second
+* Immediately start grinding through tasks at speeds of 5-20+ questions per second
 * Stop when it finishes the task
 * Stop when you press the same hotkeys again
 * Quickly _delete_ the popup modals should it get any questions wrong
@@ -155,8 +155,7 @@ this program. Everything depends on my own plans and interests. In any case, any
 public and accessible indefinitely.  
 In any case, you are very welcome to contribute to this project. Contributions can be in the form of new features, bug
 fixes, anti-cheat bypass, or even simply fixing typos and documentation. I have to specifically thank 
-[Garv](https://github.com/garv-shah) for his discovery of an exploit that made V1 fully-auto answer possible along other
-details.
+[Garv](https://github.com/garv-shah) for his discovery of an exploit that made V1 fully-auto answer possible.
 
 TODO list? or never-DO list? no one knows :P
 - Auto navigation between tasks (temporarily achieved with script+.js during V1)
