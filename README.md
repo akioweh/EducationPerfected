@@ -37,10 +37,11 @@ Either way, I have provided detailed instructions for installation and usage bel
 
 
 ## Installation
-1. install [node.js](https://nodejs.org/)
-2. install the Puppeteer library by running `npm i puppeteer` command in Command Prompt/Terminal*
-3. download the script ([index.js](index.js) found above)
-4. edit the downloaded script (using notepad) to fill in your **EP credentials** at **lines 7 & 8** if you want auto-login\*\*
+1. download the EducationPerfected program and starter script ([index.js](index.js) and [start.cmd](start.cmd) or [start.sh](start.sh) found above) and place them in the same folder
+2. install [node.js](https://nodejs.org/)
+3. open Command Prompt/Terminal **in the folder where `index.js is` located** (right click -> open in terminal or use the `cd` command to change the directory)
+4. install the Puppeteer library by running `npm i puppeteer` in your opened Command Prompt/Terminal window*
+5. edit the downloaded script (using notepad) to fill in your **EP credentials** at **lines 7 & 8** if you want auto-login\*\*
 
 
 _*...or whatever method is used to install js libraries on your platform... Google it if necessary._  
