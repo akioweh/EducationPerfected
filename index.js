@@ -10,9 +10,8 @@ const puppeteer = require('puppeteer');
         login_url: 'https://app.educationperfect.com/app/login',
 
         // log-in page elements
-        username_css: '#login-username',
-        password_css: '#login-password',
-        login_button_css: '#login-submit-button',
+        username_css: '#loginId',
+        password_css: '#password',
 
         // task-starter page elements
         baseList_css: 'div.baseLanguage',
@@ -51,9 +50,10 @@ const puppeteer = require('puppeteer');
             // THIS FILLS IN YOUR DETAILS TO LOG IN AUTOMATICALLY
             await page.type(DIR.username_css, DIR.email);
             await page.type(DIR.password_css, DIR.password);
-            await page.click(DIR.login_button_css);
+            await page.keyboard.press('Enter');
 
             await page.waitForSelector(DIR.start_button_css, {timeout: 0});
+            console.log('Logged in.');
 
 
             // ===== Auto-answer code starts here ===== //
