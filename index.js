@@ -4,14 +4,17 @@ const puppeteer = require('puppeteer');
 
 (async () => {
     const DIR = {
-		email: 'YOUR EMAIL',  // replace YOUR EMAIL with your email for auto login (keep everything else the same)
-		password: 'YOUR PASSWORD',  // replace YOUR PASSWORD with your password for auto login
+        email: 'YOUR EMAIL',  // replace YOUR EMAIL with your email for auto login (keep everything else the same)
+        password: 'YOUR PASSWORD',  // replace YOUR PASSWORD with your password for auto login
 
         login_url: 'https://app.educationperfect.com/app/login',
 
         // log-in page elements
         username_css: '#loginId',
         password_css: '#password',
+
+        // home page elements
+        home_css: 'div.view-segment-dashboard',
 
         // task-starter page elements
         baseList_css: 'div.baseLanguage',
@@ -44,16 +47,20 @@ const puppeteer = require('puppeteer');
             const page = (await browser.pages())[0];
 
             // Open EP page and log in
+            console.log('Opening EP page...');
             await page.goto(DIR.login_url);
+            console.log('Waiting for login page to load...');
             await page.waitForSelector(DIR.username_css);
 
             // THIS FILLS IN YOUR DETAILS TO LOG IN AUTOMATICALLY
+            console.log('Filling in login details...');
             await page.type(DIR.username_css, DIR.email);
             await page.type(DIR.password_css, DIR.password);
             await page.keyboard.press('Enter');
 
-            await page.waitForSelector(DIR.start_button_css, {timeout: 0});
-            console.log('Logged in.');
+            console.log('Waiting for home page to load...');
+            await page.waitForSelector(DIR.home_css, {timeout: 0});
+            console.log('EP Home page loaded; Logged in.');
 
 
             // ===== Auto-answer code starts here ===== //
@@ -197,7 +204,7 @@ const puppeteer = require('puppeteer');
                 }
 
                 await deleteModals();
-				TOGGLE = false;
+                TOGGLE = false;
                 console.log('answerLoop Exited.');
             }
 
@@ -251,6 +258,6 @@ const puppeteer = require('puppeteer');
                     }
                 });
             });
-            console.log('Education Perfected V2 Loaded.');
+            console.log('Education Perfected V2 fully Loaded.');
         });
 })();
