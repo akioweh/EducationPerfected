@@ -7,8 +7,8 @@ Works for word-to-word (translation) tasks and Dash mode.
 ![example image](result.png)
 
 
-**Current status: ALL intended features functional.***  
-_*There were some reports of anti-cheat detection, but reproduction is inconsistent_
+**CURRECT STATUS: ALL intended features functional.~~*~~**  
+~~_*There were some reports of anti-cheat detection, but reproduction is inconsistent_~~
 
 
 ## Introduction
