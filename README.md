@@ -115,7 +115,7 @@ When you run the script, it should:
 * Open a new browser window (that does not have any user data, so you must log in to EP manually. Alternatively, fill 
 in your details in the script file at line 7 & 8 for auto-login);  
 * Load EP home page;  
-* All anto-answer functionality is loaded in the background, ready to be used whenever;  
+* All auto-answer functionality is loaded in the background, ready to be used whenever;  
 * Log in for you if you provided your credentials.  
 
 Then, you can:  
