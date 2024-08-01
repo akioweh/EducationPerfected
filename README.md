@@ -7,8 +7,13 @@ Works for word-to-word (translation) tasks and Dash mode.
 ![example image](result.png)
 
 
-**CURRECT STATUS: ALL intended features functional.~~*~~**  
-~~_*There were some reports of anti-cheat detection, but reproduction is inconsistent_~~
+**CURRECT STATUS: ALL intended features functional.***  
+_*Last time I checked, which was... two years ago???_
+
+**This project is more or less abandoned** as I no longer use EP.
+However, the concept and implementation is quiet simple; 
+another interested indvidual can easily continue to maintain this...
+*just that no such person has showed up yet* :(
 
 
 ## Introduction
