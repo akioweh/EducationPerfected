@@ -59,7 +59,7 @@ const puppeteer = require('puppeteer');
             await page.keyboard.press('Enter');
 
             console.log('Waiting for home page to load...');
-            await page.waitForSelector(DIR.home_css, {timeout: 0});
+            await page.waitForSelector(DIR.home_css, { timeout: 0 });
             console.log('EP Home page loaded; Logged in.');
 
 
@@ -165,7 +165,19 @@ const puppeteer = require('puppeteer');
                 answer = cutDict[cleanString(question)];
                 if (answer) return answer;
                 console.log(`No answer found for ${question}`);
-                return "idk answer";
+                return generateRandomString(8, 10);
+            }
+
+            // i love creating functions so here's one for the random string instead of just returning idk answer 
+            // -joshatticus
+            function generateRandomString(minLength, maxLength) {
+                const length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
+                const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                let result = '';
+                for (let i = 0; i < length; i++) {
+                    result += characters.charAt(Math.floor(Math.random() * characters.length));
+                }
+                return result;
             }
 
             // main function that continually answers questions until completion modal pops up or hotkey pressed again
@@ -179,7 +191,7 @@ const puppeteer = require('puppeteer');
                     let question = await page.$eval(DIR.question_css, el => el.textContent);
                     let answer = findAnswer(question);
 
-                    await page.click(DIR.answer_box_css, {clickCount: 3});
+                    await page.click(DIR.answer_box_css, { clickCount: 3 });
                     await page.keyboard.sendCharacter(answer);
                     ENTER && page.keyboard.press('Enter');
 
@@ -235,7 +247,7 @@ const puppeteer = require('puppeteer');
             }
 
             async function alert(msg) {
-                await page.evaluate(m=> window.alert(m), msg);
+                await page.evaluate(m => window.alert(m), msg);
             }
 
             // Expose API functions to the page (for hotkey event listeners to call)
