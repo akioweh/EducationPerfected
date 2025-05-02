@@ -1,4 +1,11 @@
+> [!IMPORTANT] 
+> **This project is abandoned** as I no longer use (have access to) EP.
+> However, the concept and implementation is quite simple; 
+> another interested indvidual could continue to maintain this...
+> *just that no such person has showed up yet* :(
+
 # EducationPerfected
+
 #### Javascript program to automatically answer Education Perfect language questions at **high** speeds.
 Works for word-to-word (translation) tasks and Dash mode.  
 **Does not work with Audio-based tasks, YET.**
@@ -9,11 +16,6 @@ Works for word-to-word (translation) tasks and Dash mode.
 
 **CURRECT STATUS: ALL intended features functional.***  
 _*Last time I checked, which was... two years ago???_
-
-**This project is more or less abandoned** as I no longer use EP.
-However, the concept and implementation is quiet simple; 
-another interested indvidual can easily continue to maintain this...
-*just that no such person has showed up yet* :(
 
 
 ## Introduction
