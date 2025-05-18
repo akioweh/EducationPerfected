@@ -1,25 +1,19 @@
 const puppeteer = require('puppeteer');
 
 (async () => {
-    /**
-     * Configuration for login and DOM selectors
-     */
     const DIR = {
-        email: '##ENTER EMAIL HERE##',
-        password: '##ENTER PASSWORD HERE##',
-        // URL for EP login page
+        email: '##EMAIL##',
+        password: '##PASSWORD##',
         loginUrl: 'https://app.educationperfect.com/app/login',
         selectors: {
             username: '#loginId',
             password: '#password',
-            home: 'div.view-segment-dashboard',
             baseWords: 'div.baseLanguage.question-label.native-font.ng-binding',
             targetWords: 'div.targetLanguage.question-label.native-font.ng-binding',
             questionText: '#question-text',
             answerInput: 'input#answer-text',
             continueButton: 'button#continue-button',
             modal: 'div[uib-modal-window=modal-window]',
-            modalBackdrop: 'div[uib-modal-backdrop=modal-backdrop]',
             modalFields: {
                 question: 'td.field.native-font#question-field',
                 correct: 'td.field.native-font#correct-answer-field'
@@ -27,157 +21,233 @@ const puppeteer = require('puppeteer');
         }
     };
 
-    // State for dictionaries and control flags
-    let dict = {}, shortDict = {};
+    let dict = {}, shortDict = {}, audioMap = {};
     let running = false;
-    let mode = 'delay'; // default answer mode
+    let mode = 'delay';
 
-    /**
-     * Normalize a string by stripping parentheses and separators.
-     */
-    function cleanString(str) {
-        return String(str).replace(/\([^)]*\)/g, '').split(/[;,|]/)[0].trim();
+    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+    const cleanString = s => String(s).replace(/\([^)]*\)/g, '').split(/[;,|]/)[0].trim();
+    const randStr = (min, max) => {
+        const len = Math.floor(Math.random() * (max - min + 1)) + min;
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        return Array.from({ length: len })
+            .map(() => chars[Math.floor(Math.random() * chars.length)])
+            .join('');
+    };
+
+    async function notify(msg) {
+        await page.evaluate(message => alert(message), msg);
     }
 
-    /**
-     * Populate dictionaries from the page word lists.
-     */
     async function updateDicts() {
+        // reset text dictionaries only
+        dict = {};
+        shortDict = {};
+        console.log('Cleared text dicts');
         const base = await page.$$eval(DIR.selectors.baseWords, els => els.map(e => e.textContent));
         const target = await page.$$eval(DIR.selectors.targetWords, els => els.map(e => e.textContent));
         base.forEach((bRaw, i) => {
+            const t = cleanString(target[i] || '');
             const b = cleanString(bRaw);
-            const t = cleanString(target[i]);
-            dict[bRaw] = t;
-            dict[t] = b;
-            shortDict[b] = t;
-            shortDict[t] = b;
+            if (t && b) {
+                dict[t] = b;
+                shortDict[t] = b;
+            }
         });
-        console.log('Dictionaries updated');
+        console.log('Text dict refreshed, entries=', Object.keys(dict).length);
         await notify('Word lists refreshed');
     }
 
-    /**
-     * Show a browser alert with a message.
-     */
-    async function notify(message) {
-        await page.evaluate(msg => alert(msg), message);
-    }
-
-    /**
-     * Determine answer for a question or fallback.
-     */
-    function findAnswer(question) {
-        return dict[question] || dict[question.replace(',', ';')] || shortDict[cleanString(question)] || randStr(8, 10);
-    }
-
-    /**
-     * Generate a random alphanumeric string.
-     */
-    function randStr(min, max) {
-        const len = Math.floor(Math.random() * (max - min + 1)) + min;
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        return Array.from({ length: len }).map(() => chars[Math.floor(Math.random() * chars.length)]).join('');
-    }
-
-    /**
-     * Pause execution.
-     */
-    const sleep = ms => new Promise(res => setTimeout(res, ms));
-
-    /**
-     * Handle incorrect-answer modal to update dicts.
-     */
-    async function fixAnswer(question) {
-        try {
-            await page.waitForFunction(sel => document.querySelector(sel)?.textContent.trim().length > 0, {}, DIR.selectors.modalFields.question);
-        } catch {
-            console.warn('Skipping fix: modal not found');
-            return;
+    async function buildAudioMap() {
+        // reset both dicts
+        dict = {};
+        shortDict = {};
+        audioMap = {};
+        console.log('Cleared text dicts and audioMap');
+        const items = await page.$$('.preview-grid .stats-item');
+        console.log('buildAudioMap: items=', items.length);
+        for (const item of items) {
+            const icon = await item.$('.sound-icon.has-sound');
+            if (!icon) continue;
+            const rawA = await item.$eval('.baseLanguage', el => el.textContent.trim());
+            const a = cleanString(rawA);
+            await page.evaluate(el => el.click(), icon);
+            await sleep(500);
+            const src = await page.evaluate(() => window.lastAudioSrc || null);
+            console.log('buildAudioMap: mapped', a, '(', src, ')');
+            if (src) {
+                audioMap[src] = a;
+            }
         }
-        const correctText = await page.$eval(DIR.selectors.modalFields.correct, el => el.textContent);
-        dict[question] = cleanString(correctText);
-        await page.$eval(DIR.selectors.continueButton, btn => btn.disabled = false);
-        await page.click(DIR.selectors.continueButton);
+        console.log('Audio map built, entries=', Object.keys(audioMap).length);
+        await notify('Audio map refreshed');
     }
 
-    /**
-     * Remove any open modals.
-     */
-    async function clearModals() {
-        await page.$$eval(DIR.selectors.modal, els => els.forEach(e => e.remove()));
-        await page.$$eval(DIR.selectors.modalBackdrop, els => els.forEach(e => e.remove()));
+    async function fixAnswer(lastAnswer) {
+        try {
+            await page.waitForFunction(
+                sel => document.querySelector(sel)?.textContent.trim().length > 0,
+                {},
+                DIR.selectors.modalFields.question
+            );
+            const correctText = await page.$eval(
+                DIR.selectors.modalFields.correct,
+                el => el.textContent
+            );
+            dict[lastAnswer] = cleanString(correctText);
+            await page.$eval(DIR.selectors.continueButton, btn => btn.disabled = false);
+            await page.click(DIR.selectors.continueButton);
+        } catch (err) {
+            console.error('fixAnswer error', err);
+        }
     }
 
-    /**
-     * Main loop: submit answers and handle modes.
-     */
     async function loopAnswers() {
         console.log('Answer loop started');
         while (running) {
-            const q = await page.$eval(DIR.selectors.questionText, el => el.textContent);
-            const a = findAnswer(q);
+            let answer;
+            // detect text question
+            let qText = '';
+            try {
+                qText = await page.$eval(
+                    DIR.selectors.questionText,
+                    el => el.textContent.trim()
+                );
+            } catch {}
+
+            if (qText) {
+                console.log('Text question:', qText);
+                answer = dict[qText] || shortDict[cleanString(qText)] || randStr(8, 10);
+                console.log('Using text answer:', answer);
+            } else {
+                console.log('Audio question');
+                let src = null;
+                try {
+                    const speaker = await page.$('.voice-speaker');
+                    if (speaker) {
+                        await page.evaluate(el => el.click(), speaker);
+                        await sleep(500);
+                        src = await page.evaluate(() => window.lastAudioSrc || null);
+                        console.log('Detected src:', src);
+                    }
+                } catch {}
+                answer = (src && audioMap[src]) || randStr(8, 10);
+                console.log('Using audio answer:', answer);
+            }
+
             await page.click(DIR.selectors.answerInput, { clickCount: 3 });
-            await page.keyboard.sendCharacter(a);
-            if (mode === 'auto') await page.keyboard.press('Enter');
-            else if (mode === 'delay') { await sleep(Math.random() * 3000); await page.keyboard.press('Enter'); }
-            if (await page.$(DIR.selectors.modal)) { await fixAnswer(q); await clearModals(); }
+            await page.keyboard.sendCharacter(answer);
+
+            if (mode === 'auto') {
+                await page.keyboard.press('Enter');
+            } else if (mode === 'delay') {
+                await sleep(Math.random() * 3000);
+                await page.keyboard.press('Enter');
+            }
+
+            if (await page.$(DIR.selectors.modal)) {
+                await fixAnswer(answer);
+            }
         }
         console.log('Answer loop stopped');
     }
 
-    /**
-     * Toggle auto-answer loop and update start button color.
-     */
     async function toggleRun() {
         running = !running;
         await notify(running ? 'Auto-answer started' : 'Auto-answer stopped');
-        await page.evaluate(r => { const btn = document.getElementById('start-btn'); if (btn) btn.style.backgroundColor = r ? 'lightgreen' : '#f0f0f0'; }, running);
-        if (running) loopAnswers().catch(e => { console.error(e); running = false });
+        await page.evaluate(
+            run => document.getElementById('start-btn').style.backgroundColor = run ? 'lightgreen' : '#f0f0f0',
+            running
+        );
+        if (running) {
+            loopAnswers().catch(err => {
+                console.error(err);
+                running = false;
+            });
+        }
     }
 
-    /**
-     * Change mode and highlight active mode button.
-     */
     async function setMode(newMode) {
         mode = newMode;
-        await notify(`Mode: ${mode}`);
-        await page.evaluate(active => { ['Auto','Semi','Delay'].forEach(l => { const b = document.getElementById(`mode-${l}`); if (b) b.style.backgroundColor = l.toLowerCase()===active?'lightgreen':'#f0f0f0'; }); }, mode);
-    }
-
-    /**
-     * Create and style control panel buttons and tooltips.
-     */
-    async function initPanel() {
-        await page.evaluate(defaultMode => {
-            if (document.querySelector('#ep-control-panel')) return;
-            const panel = document.createElement('div'); panel.id='ep-control-panel';
-            Object.assign(panel.style,{position:'fixed',top:'3%',left:'50%',transform:'translate(-50%,-50%)',background:'transparent',padding:'8px',zIndex:2147483647});
-            const makeButton=(id,icon,tip,fn,act=false)=>{const b=document.createElement('button');b.id=id;b.innerHTML=icon;b.title=tip;Object.assign(b.style,{margin:'4px',padding:'6px 10px',borderRadius:'6px',border:'1px solid #aaa',backgroundColor:act?'lightgreen':'#f0f0f0',cursor:'pointer',fontSize:'14px'});b.onclick=()=>fn();b.onmouseover=()=>b.style.backgroundColor='#e0e0e0';b.onmouseout=()=>b.style.backgroundColor=act?'lightgreen':'#f0f0f0';return b};
-            panel.append(makeButton('refresh-btn','🔄','Refresh words',window.refresh),makeButton('start-btn','▶️','Start/stop',window.startAnswer),makeButton('mode-Auto','⚡','Instant submit',window.setAuto,false),makeButton('mode-Semi','⏸️','Enter only',window.setSemi,false),makeButton('mode-Delay','⏱️','0-3s delay',window.setDelay,true));
-            document.body.append(panel);
+        await notify(`Mode: ${newMode}`);
+        await page.evaluate(active => {
+            ['Auto', 'Semi', 'Delay'].forEach(l => {
+                const btn = document.getElementById(`mode-${l}`);
+                if (btn) {
+                    btn.style.backgroundColor = l.toLowerCase() === active ? 'lightgreen' : '#f0f0f0';
+                }
+            });
         }, mode);
     }
 
-    // Launch and open page
-    const browser = await puppeteer.launch({headless:false,defaultViewport:null});
+    async function initPanel() {
+        await page.evaluate(currentMode => {
+            if (document.querySelector('#ep-control-panel')) return;
+            const panel = document.createElement('div');
+            panel.id = 'ep-control-panel';
+            Object.assign(panel.style, {
+                position: 'fixed',
+                top: '3%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                padding: '8px',
+                zIndex: 9999
+            });
+            const icons = ['🔄', '▶️', '⚡', '⏸️', '⏱️', '🔊'];
+            const ids = ['refresh-btn', 'start-btn', 'mode-Auto', 'mode-Semi', 'mode-Delay', 'refresh-audio'];
+            const tips = ['Refresh words', 'Start/stop', 'Instant', 'Semi-auto', 'Delayed', 'Refresh audio map'];
+            const fns = [window.refresh, window.startAnswer, window.setAuto, window.setSemi, window.setDelay, window.buildAudioMap];
+            icons.forEach((icon, index) => {
+                const btn = document.createElement('button');
+                btn.id = ids[index];
+                btn.textContent = icon;
+                btn.title = tips[index];
+                Object.assign(btn.style, {
+                    margin: '4px',
+                    padding: '6px 10px',
+                    borderRadius: '6px',
+                    border: '1px solid #aaa',
+                    backgroundColor: ids[index] === 'mode-Delay' ? 'lightgreen' : '#f0f0f0',
+                    cursor: 'pointer'
+                });
+                btn.onclick = fns[index];
+                btn.onmouseover = () => btn.style.backgroundColor = '#e0e0e0';
+                btn.onmouseout = () => btn.style.backgroundColor = ids[index] === 'mode-Delay' ? 'lightgreen' : '#f0f0f0';
+                panel.appendChild(btn);
+            });
+            document.body.appendChild(panel);
+        }, mode);
+        console.log('Panel ready');
+    }
+
+    // launch
+    const browser = await puppeteer.launch({ headless: false, defaultViewport: null });
     const [page] = await browser.pages();
 
-    // Expose functions in page context
+    // intercept audio
+    await page.evaluateOnNewDocument(() => {
+        window.lastAudioSrc = null;
+        const origPlay = HTMLAudioElement.prototype.play;
+        HTMLAudioElement.prototype.play = function() {
+            window.lastAudioSrc = this.src;
+            return origPlay.call(this);
+        };
+    });
+
+    // expose functions
     await page.exposeFunction('refresh', updateDicts);
+    await page.exposeFunction('buildAudioMap', buildAudioMap);
     await page.exposeFunction('startAnswer', toggleRun);
     await page.exposeFunction('setAuto', () => setMode('auto'));
     await page.exposeFunction('setSemi', () => setMode('semi'));
     await page.exposeFunction('setDelay', () => setMode('delay'));
-
-    // Attach panel init
     page.on('load', initPanel);
 
-    // Login without waiting for home selector
+    // login
     await page.goto(DIR.loginUrl);
     await page.waitForSelector(DIR.selectors.username);
     await page.type(DIR.selectors.username, DIR.email);
     await page.type(DIR.selectors.password, DIR.password);
     await page.keyboard.press('Enter');
-    console.log('Login attempted, ready to start automation');
+    console.log('Logged in');
 })();
