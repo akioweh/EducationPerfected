@@ -1,63 +1,67 @@
 # EducationPerfected
 
-#### JavaScript program to automatically answer Education Perfect language questions at **high** speeds.
+**Automatic answer bot for Education Perfect language tasks using Puppeteer**
 
-Works for word-to-word (translation) tasks and Dash mode.
-**Does not work with Audio-based tasks, YET.**
-
-![example image](result.png)
-
-**CURRENT STATUS: ALL intended features functional.
+<p align="center">
+  <img src="result.png" alt="Example" />
+</p>
 
 ## Introduction
 
-This project began as a way to automate tasks on [Education Perfect](https://www.educationperfect.com/) which teachers use to set students homework. One of those students happened to be me. I set out to perfect Education Perfect, making EducationPerfected.
-The main goal was and still is language tasks that require translating words or phrases.
-Audio tasks are not supported yet.
+EducationPerfected automates word-to-word translation tasks on [Education Perfect](https://www.educationperfect.com/). It logs you in, presents a small floating control panel, and answers translation questions in one of three modes:
 
-V1 was a userscript injected in the browser console. It was simple and fast. But anti-cheat features broke it.
-V2 is a Node.js program using Puppeteer. It runs outside the page and bypasses those limits.
+* **Instant**: submits answers immediately
+* **Semi-Auto**: types answers but waits for you to press Enter
+* **Delayed** (default): types answers then submits after a random 0–3s delay
+
+The bot also learns from incorrect answers via modal dialogs and updates its dictionary on the fly.
 
 ## Installation
 
-1. Download `index.js` and the start script (`start.cmd` or `start.sh`) into one folder.
-2. Install [Node.js](https://nodejs.org/).
-3. Open a terminal in that folder.
-4. Run `npm i puppeteer` to install Puppeteer.
-5. Edit `index.js` at lines 7–8 to add your EP email and password.
+1. Clone or download this repo.
+2. Install [Node.js](https://nodejs.org/) (v14+).
+3. In the project folder, run:
 
-Note: If Chromium is missing, run `node node_modules/puppeteer/install.js`.
+   ```bash
+   npm install puppeteer
+   ```
+4. Edit `index.js`, set your `email` and `password` in the `DIR` config at top.
 
 ## Usage
 
-1. Run the start script or `node index.js`.
-2. A browser window will open and log you in.
-3. A control panel appears in the top right with three buttons:
+```bash
+node index.js
+```
 
-   * **Refresh Words**: Learn the current task's word list.
-   * **Start/Stop**: Begin or end auto-answering.
-   * **Toggle Mode**: Switch between full-auto (auto enter) and semi-auto (you press enter).
-4. Use the panel on any task page:
+1. A Chrome window opens and logs in automatically.
+2. On any translation task page, use the floating panel:
 
-   * First click **Refresh Words** on the word list page.
-   * Then click **Start/Stop** on the question page to begin.
-   * If you want to type but not auto-submit, click **Toggle Mode**.
-
-Close the browser or terminal when done. Restart if you see odd behavior.
+   * 🔄 **Refresh Words**: load current word list into the bot’s dictionary
+   * ▶️ **Start/Stop**: begin or end auto-answering
+   * ⚡ **Instant** / ⏸️ **Semi-Auto** / ⏱️ **Delayed**: choose answer mode (Delayed is default)
+3. Once done, close the browser or Ctrl-C in the terminal.
 
 ## Features
 
-* **Control Panel**: Easy buttons for all actions.
-* **Full-Speed Auto Answer**: Answers at 5–20+ questions per second.
-* **Semi-Auto Mode**: Types answers but waits for you to submit.
-* **Error Correction**: Detects wrong answers, learns from modals, and updates its dictionary.
-* **Smart Parsing**: Cleans up formatting edge cases so more answers match correctly.
+* **Control Panel** with icons and tooltips
+* **Default Delay Mode** (0–3 s random delay) for human‑like timing
+* **Instant Mode** (submits immediately)
+* **Semi‑Auto Mode** (types only)
+* **Auto‑Learn** from incorrect answers via modal dialogs
+* **No custom timeouts** — uses default Puppeteer settings
+
+## Development
+
+* Code is in `index.js` (v1.11)
+* Uses `await page.exposeFunction` to bind panel buttons
+* Cleaned up with docstrings and comments
 
 ## Future Plans
 
-* Support for audio-based tasks.
-* Better anti-cheat bypass.
-* More parsing improvements.
-* Community contributions welcome.
+* Support audio‑based tasks
+* Persist settings between sessions
+* User‑configurable delay range
 
-*Thank you to [Garv](https://github.com/garv-shah) for his V1 exploit discovery.*
+---
+
+*Author: André Nijman*
