@@ -4,272 +4,177 @@ const puppeteer = require('puppeteer');
 
 (async () => {
     const DIR = {
-        email: 'YOUR EMAIL',  // replace YOUR EMAIL with your email for auto login (keep everything else the same)
-        password: 'YOUR PASSWORD',  // replace YOUR PASSWORD with your password for auto login
-
+        email: 'Enter your email here',
+        password: 'Enter your password here',
         login_url: 'https://app.educationperfect.com/app/login',
-
-        // log-in page elements
         username_css: '#loginId',
         password_css: '#password',
-
-        // home page elements
         home_css: 'div.view-segment-dashboard',
-
-        // task-starter page elements
-        baseList_css: 'div.baseLanguage',
-        targetList_css: 'div.targetLanguage',
-        start_button_css: 'button#start-button-main',
-
-        // task page elements
+        baseList_css: 'div.baseLanguage.question-label.native-font.ng-binding',
+        targetList_css: 'div.targetLanguage.question-label.native-font.ng-binding',
+        question_css: '#question-text',
+        answer_box_css: 'input#answer-text',
+        continue_button_css: 'button#continue-button',
         modal_question_css: 'td#question-field',
         modal_correct_answer_css: 'td#correct-answer-field',
         modal_user_answered_css: 'td#users-answer-field',
         modal_css: 'div[uib-modal-window=modal-window]',
         modal_backdrop_css: 'div[uib-modal-backdrop=modal-backdrop]',
-
-        question_css: '#question-text',
-        answer_box_css: 'input#answer-text',
-
         exit_button_css: 'button.exit-button',
         exit_continue_button_css: 'button.continue-button',
+    };
 
-        continue_button_css: 'button#continue-button',
+    // answer control state
+    let fullDict = {};
+    let cutDict = {};
+    let TOGGLE = false;
+    let ENTER = true;
+
+    // helper: clean text
+    function cleanString(string) {
+        return String(string)
+            .replace(/\([^)]*\)/g, "").trim()
+            .split(";")[0].trim()
+            .split(",")[0].trim()
+            .split("|")[0].trim();
+    }
+
+    // extract list of words
+    async function wordList(selector) {
+        return await page.$$eval(selector, els => els.map(i => i.textContent));
+    }
+
+    // refresh dictionary from page
+    async function refreshWords() {
+        const l1 = await wordList(DIR.baseList_css);
+        const l2 = await wordList(DIR.targetList_css);
+        for (let i = 0; i < l1.length; i++) {
+            fullDict[l2[i]] = cleanString(l1[i]);
+            fullDict[l1[i]] = cleanString(l2[i]);
+            console.log(`Added ${l2[i]} => ${l1[i]}`);
+            console.log(`Added ${l1[i]} => ${l2[i]}`);
+            cutDict[cleanString(l2[i])] = cleanString(l1[i]);
+            cutDict[cleanString(l1[i])] = cleanString(l2[i]);
+        }
+        console.log('Word Lists Refreshed.');
+        await alert('Word Lists Refreshed.');
+    }
+
+    // toggle answer loop
+    async function toggleLoop() {
+        TOGGLE = !TOGGLE;
+        await alert(TOGGLE ? 'Starting auto-answer.' : 'Stopping auto-answer.');
+        if (TOGGLE) answerLoop().catch(e => { console.error(e); TOGGLE = false });
+    }
+
+    // toggle enter mode
+    async function toggleAuto() {
+        ENTER = !ENTER;
+        await alert(ENTER ? 'Switched to auto mode.' : 'Switched to semi-auto mode.');
+    }
+
+    // show alert in page
+    async function alert(msg) {
+        await page.evaluate(m => window.alert(m), msg);
+    }
+
+    // get modal answer text
+    async function getModalAnswered() {
+        return await page.$$eval(DIR.modal_user_answered_css + ' > *', els =>
+            els.reduce((ans, i) => ans + ((i.textContent && i.style.color !== 'rgba(0, 0, 0, 0.25)') ? i.textContent : ''), '')
+        );
+    }
+
+    // handle incorrect answer modal
+    async function correctAnswer(question, answer) {
+        await page.waitForFunction(css => document.querySelector(css).textContent !== 'blau', {}, DIR.modal_question_css);
+        const modalAnswer = await page.$eval(DIR.modal_correct_answer_css, el => el.textContent);
+        const modalCutAnswer = cleanString(modalAnswer);
+        await page.$eval(DIR.continue_button_css, el => el.disabled = false);
+        await page.click(DIR.continue_button_css);
+        fullDict[question] = modalCutAnswer;
+    }
+
+    // cleanup any modals
+    async function deleteModals() {
+        await page.$$eval(DIR.modal_css, els => els.forEach(i => i.remove()));
+        await page.$$eval(DIR.modal_backdrop_css, els => els.forEach(i => i.remove()));
+    }
+
+    // generate fallback answer
+    function generateRandomString(minLength, maxLength) {
+        const length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        return Array.from({ length }).map(() => chars.charAt(Math.floor(Math.random() * chars.length))).join('');
+    }
+
+    // find answer in dict or random
+    function findAnswer(question) {
+        return fullDict[question] || fullDict[question.replace(',', ';')] || cutDict[cleanString(question)] || generateRandomString(8, 10);
+    }
+
+    // main loop
+    async function answerLoop() {
+        console.log('answerLoop started');
+        while (TOGGLE) {
+            const question = await page.$eval(DIR.question_css, el => el.textContent);
+            const answer = findAnswer(question);
+            await page.click(DIR.answer_box_css, { clickCount: 3 });
+            await page.keyboard.sendCharacter(answer);
+            if (ENTER) await page.keyboard.press('Enter');
+            if (await page.$(DIR.modal_css)) {
+                await correctAnswer(question, answer);
+                await deleteModals();
+            }
+        }
+        console.log('answerLoop stopped');
     }
 
     // launch browser
-    puppeteer.launch({
-        headless: false,
-        defaultViewport: null,
-        handleSIGINT: false
-    })
-        .then(async browser => {
-            const page = (await browser.pages())[0];
+    const browser = await puppeteer.launch({ headless: false, defaultViewport: null, handleSIGINT: false });
+    const [page] = await browser.pages();
 
-            // Open EP page and log in
-            console.log('Opening EP page...');
-            await page.goto(DIR.login_url);
-            console.log('Waiting for login page to load...');
-            await page.waitForSelector(DIR.username_css);
+    // bind controls
+    await page.exposeFunction('refresh', refreshWords);
+    await page.exposeFunction('startAnswer', toggleLoop);
+    await page.exposeFunction('toggleMode', toggleAuto);
+    await page.exposeFunction('onBtnClick', name => console.log(`Button "${name}" clicked`));
 
-            // THIS FILLS IN YOUR DETAILS TO LOG IN AUTOMATICALLY
-            console.log('Filling in login details...');
-            await page.type(DIR.username_css, DIR.email);
-            await page.type(DIR.password_css, DIR.password);
-            await page.keyboard.press('Enter');
-
-            console.log('Waiting for home page to load...');
-            await page.waitForSelector(DIR.home_css, { timeout: 0 });
-            console.log('EP Home page loaded; Logged in.');
-
-
-            // ===== Auto-answer code starts here ===== //
-            let TOGGLE = false;
-            let ENTER = true;
-            let fullDict = {};
-            let cutDict = {};
-
-            // Basic answer-parsing
-            function cleanString(string) {
-                return String(string)
-                    .replace(/\([^)]*\)/g, "").trim()
-                    .split(";")[0].trim()
-                    .split(",")[0].trim()
-                    .split("|")[0].trim();
-            }
-
-            // Get words from the main task page
-            async function wordList(selector) {
-                return await page.$$eval(selector, els => {
-                    let words = [];
-                    els.forEach(i => words.push(i.textContent));
-                    return words;
-                });
-            }
-
-            // Refreshes the world lists on the main task page to enhance our vocabulary
-            async function refreshWords() {
-                const l1 = await wordList(DIR.baseList_css);
-                const l2 = await wordList(DIR.targetList_css);
-                for (let i = 0; i < l1.length; i++) {
-                    fullDict[l2[i]] = cleanString(l1[i]);
-                    fullDict[l1[i]] = cleanString(l2[i]);
-                    cutDict[cleanString(l2[i])] = cleanString(l1[i]);
-                    cutDict[cleanString(l1[i])] = cleanString(l2[i]);
-                }
-                console.log('Word Lists Refreshed.');
-                await alert('Word Lists Refreshed.');
-            }
-
-
-            // extracts what (EP detected as) the user typed, from the fancy multicolored display
-            // appended to logs for debugging/self-learning purposes
-            async function getModalAnswered() {
-                return await page.$$eval('td#users-answer-field > *', el => {
-                    let answered = '';
-                    el.forEach(i => {
-                        if (i.textContent !== null && i.style.color !== 'rgba(0, 0, 0, 0.25)') answered = answered + i.textContent;
-                    })
-                    return answered;
-                });
-            }
-
-            // Learn from the mistakes :)
-            async function correctAnswer(question, answer) {
-                // wait until modal content is fully loaded
-                await page.waitForFunction((css) => {
-                    return document.querySelector(css).textContent !== "blau";
-                }, {}, DIR.modal_question_css);
-
-                // extract modal contents (for debugging and correcting answers)
-                let modalQuestion = await page.$eval(DIR.modal_question_css, el => el.textContent);
-                let modalAnswer = await page.$eval(DIR.modal_correct_answer_css, el => el.textContent);
-                let modalCutAnswer = cleanString(modalAnswer);
-                let modalAnswered = await getModalAnswered();
-
-                // dismisses the modal (bypasses the required cooldown)
-                await page.$eval(DIR.continue_button_css, el => el.disabled = false);
-                await page.click(DIR.continue_button_css);
-
-                // update/correct answer dictionary
-                fullDict[question] = modalCutAnswer;
-
-                // logging for debugging if needed
-                let log = "===== Details after Incorrect Answer: =====\n"
-                log = log + `Detected Question: \n => ${question}\n`;
-                log = log + `Inputted Answer: \n => ${answer}\n\n`;
-                log = log + `Modal Question: \n => ${modalQuestion}\n`;
-                log = log + `Modal Full Answer: \n => ${modalAnswer}\n`;
-                log = log + `Modal Cut Answer: \n => ${modalCutAnswer}\n`;
-                log = log + `Modal Detected Answered: \n => ${modalAnswered}\n\n\n`;
-
-                console.log(log);
-            }
-
-            // deletes all existing modals and backdrops. Used to force-speed things up
-            async function deleteModals() {
-                await page.$$eval(DIR.modal_css, el => {
-                    el.forEach(i => i.remove())
-                });
-                await page.$$eval(DIR.modal_backdrop_css, el => {
-                    el.forEach(i => i.remove())
-                });
-            }
-
-            // very advanced logic (ofc) used to find matching answer
-            function findAnswer(question) {
-                let answer = fullDict[question];
-                if (answer) return answer;
-                answer = fullDict[question.replace(",", ";")];
-                if (answer) return answer;
-                answer = cutDict[cleanString(question)];
-                if (answer) return answer;
-                console.log(`No answer found for ${question}`);
-                return generateRandomString(8, 10);
-            }
-
-            // i love creating functions so here's one for the random string instead of just returning idk answer 
-            // -joshatticus
-            function generateRandomString(minLength, maxLength) {
-                const length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
-                const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-                let result = '';
-                for (let i = 0; i < length; i++) {
-                    result += characters.charAt(Math.floor(Math.random() * characters.length));
-                }
-                return result;
-            }
-
-            // main function that continually answers questions until completion modal pops up or hotkey pressed again
-            async function answerLoop() {
-                if (TOGGLE) throw Error("Tried to initiate answerLoop while it is already running");
-
-                TOGGLE = true;
-                console.log("answerLoop entered.");
-
-                while (TOGGLE) {
-                    let question = await page.$eval(DIR.question_css, el => el.textContent);
-                    let answer = findAnswer(question);
-
-                    await page.click(DIR.answer_box_css, { clickCount: 3 });
-                    await page.keyboard.sendCharacter(answer);
-                    ENTER && page.keyboard.press('Enter');
-
-                    // special case: modal pops up
-                    if (await page.$(DIR.modal_css)) {
-                        // incorrect answer and modal pops up; initiate answer-correction procedure
-                        if (await page.$(DIR.modal_question_css) !== null) {
-                            await correctAnswer(question, answer);
-                            await deleteModals();
-                            // list complete; clicks button to exit
-                        } else if (await page.$(DIR.exit_button_css)) {
-                            await page.click(DIR.exit_button_css);
-                            break;
-                        } else if (await page.$(DIR.exit_continue_button_css)) {
-                            await page.click(DIR.exit_continue_button_css);
-                            break;
-                        } else {
-                            // no idea what the modal is for so let's just pretend it doesn't exist
-                            await deleteModals();
-                        }
-                    }
-                }
-
-                await deleteModals();
-                TOGGLE = false;
-                console.log('answerLoop Exited.');
-            }
-
-            // takes care of answerLoop toggling logic
-            async function toggleLoop() {
-                if (TOGGLE) {
-                    TOGGLE = false;
-                    console.log("Stopping answerLoop.");
-                } else {
-                    console.log("Starting answerLoop.");
-                    answerLoop().catch(e => {
-                        console.error(e);
-                        TOGGLE = false
-                    });
-                }
-            }
-
-            async function toggleAuto() {
-                if (ENTER) {
-                    ENTER = false;
-                    console.log("Switched to semi-auto mode.");
-                    await alert("Switched to semi-auto mode.");
-                } else {
-                    ENTER = true;
-                    console.log("Switched to auto mode.");
-                    await alert("Switched to auto mode.");
-                }
-            }
-
-            async function alert(msg) {
-                await page.evaluate(m => window.alert(m), msg);
-            }
-
-            // Expose API functions to the page (for hotkey event listeners to call)
-            await page.exposeFunction('refresh', refreshWords);
-            await page.exposeFunction('startAnswer', toggleLoop);
-            await page.exposeFunction('toggleMode', toggleAuto);
-
-            // Add event listeners for hotkeys ON the page
+    // inject panel
+    page.on('load', async () => {
+        try {
             await page.evaluate(() => {
-                document.addEventListener("keyup", async (event) => {
-                    let key = event.key.toLowerCase();
-                    if (key !== 'alt') {
-                        if ((event.altKey && key === "r") || (key === "®")) {
-                            await window.refresh();
-                        } else if ((event.altKey && key === "s") || (key === "ß")) {
-                            await window.startAnswer();
-                        } else if ((event.altKey && key === "a") || (key === "å")) {
-                            await window.toggleMode();
-                        }
-                    }
+                if (document.querySelector('#ep-control-panel')) return;
+                const panel = document.createElement('div');
+                panel.id = 'ep-control-panel';
+                Object.assign(panel.style, {
+                    position: 'fixed', top: '2%', left: '85%', transform: 'translate(-50%, -50%)', background: '#fff', border: '1px solid #ccc', padding: '8px', zIndex: 2147483647
                 });
+                function makeButton(text, fn) {
+                    const btn = document.createElement('button');
+                    btn.textContent = text;
+                    btn.style.margin = '0 4px';
+                    btn.addEventListener('click', () => {
+                        window.onBtnClick(text);
+                        fn();
+                    });
+                    return btn;
+                }
+                const r = makeButton('Refresh', () => window.refresh());
+                const s = makeButton('Start/Stop', () => window.startAnswer());
+                const m = makeButton('Toggle Mode', () => window.toggleMode());
+                panel.append(r, s, m);
+                document.body.append(panel);
             });
-            console.log('Education Perfected V2 fully Loaded.');
-        });
+        } catch (e) { console.error('Panel injection failed:', e); }
+    });
+
+    // open and login
+    await page.goto(DIR.login_url);
+    await page.waitForSelector(DIR.username_css);
+    await page.type(DIR.username_css, DIR.email);
+    await page.type(DIR.password_css, DIR.password);
+    await page.keyboard.press('Enter');
+    await page.waitForSelector(DIR.home_css, { timeout: 0 });
+    console.log('Logged in and ready');
 })();
