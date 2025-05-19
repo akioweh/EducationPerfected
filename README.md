@@ -22,7 +22,7 @@ For listening questions it builds the audio map by clicking each speaker icon in
 
 2. Install [Node.js](https://nodejs.org/) v14+.
 
-3. In the project folder, run:
+3. In the project folder, in a terminal run:
 
    ```bash
    npm install puppeteer
@@ -32,11 +32,11 @@ For listening questions it builds the audio map by clicking each speaker icon in
 
 ## Usage
 
-1. Run this command in a terminal
+1. Run this command in the project folder terminal:
 
-```bash
-node index.js
-```
+   ```bash
+   node index.js
+   ```
 
 2. A Chrome window opens and logs you in automatically.
 
