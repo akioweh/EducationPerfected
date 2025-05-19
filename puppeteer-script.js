@@ -10,7 +10,7 @@ const puppeteer = require('puppeteer');
             password: '#password',
             baseWords: 'div.baseLanguage.question-label.native-font.ng-binding',
             targetWords: 'div.targetLanguage.question-label.native-font.ng-binding',
-            questionText: '#question-text',
+            questionText: '#question-text.native-font',
             answerInput: 'input#answer-text',
             continueButton: 'button#continue-button',
             modal: 'div[uib-modal-window=modal-window]',
@@ -72,8 +72,14 @@ const puppeteer = require('puppeteer');
             }
         } catch {}
 
-        await notify('All word lists refreshed.');
+        let message = 'All word lists refreshed:\n';
+        for (const [k, v] of Object.entries(dict)) {
+            const link = Object.entries(audioMap).find(([, word]) => word === v)?.[0] || 'no audio';
+            message += `${k} → ${v} (${link})\n`;
+        }
+        await notify(message);
     }
+
 
     async function fixAnswer(lastAnswer) {
         try {
@@ -94,7 +100,7 @@ const puppeteer = require('puppeteer');
             } catch {}
 
             if (qText) {
-                const cleaned = cleanString(qText);
+                const cleaned = cleanString(qText).split(/[;,]/)[0].trim();
                 if (dict[cleaned]) {
                     answer = dict[cleaned];
                 } else if (shortDict[cleaned]) {
@@ -104,6 +110,7 @@ const puppeteer = require('puppeteer');
                 } else {
                     answer = randStr(8, 10);
                 }
+                //await notify(`Question: "${qText}"\nCleaned: "${cleaned}"\nAnswer: "${answer}"`);
             } else {
                 let src = null;
                 try {
@@ -115,6 +122,7 @@ const puppeteer = require('puppeteer');
                     }
                 } catch {}
                 answer = (src && audioMap[src]) || randStr(8, 10);
+                await notify(`Audio question: src="${src}"\nAnswer: "${answer}"`);
             }
 
             await page.click(DIR.selectors.answerInput, { clickCount: 3 });
@@ -132,6 +140,7 @@ const puppeteer = require('puppeteer');
             }
         }
     }
+
 
     async function toggleRun() {
         running = !running;
