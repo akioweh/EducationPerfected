@@ -19,6 +19,7 @@
   ],
   "dependencies": {
     "node": "^20.19.2",
+    "puppeteer": "^24.8.2",
     "puppeteer-core": "^24.8.2"
   },
   "devDependencies": {

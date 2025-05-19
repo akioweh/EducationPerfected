@@ -26,7 +26,7 @@ const puppeteer = require('puppeteer');
     let mode = 'delay';
 
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-    const cleanString = s => String(s).replace(/\([^)]*\)/g, '').split(/[;,|]/)[0].trim();
+    const cleanString = s => String(s).replace(/\([^)]*\)/g, '').split(/[;]/)[0].trim();
     const randStr = (min, max) => {
         const len = Math.floor(Math.random() * (max - min + 1)) + min;
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
