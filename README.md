@@ -32,13 +32,15 @@ For listening questions it builds the audio map by clicking each speaker icon in
 
 ## Usage
 
+1. Run this command in a terminal
+
 ```bash
 node index.js
 ```
 
-1. A Chrome window opens and logs you in automatically.
+2. A Chrome window opens and logs you in automatically.
 
-2. On any task page, use the floating panel:
+3. On any task page, use the floating panel:
 
    * 🔄 **Refresh Words**: clears and reloads the text translation dictionary
    * 🔊 **Refresh Audio**: clears dictionaries and rebuilds audio map by automatically clicking each speaker icon
