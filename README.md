@@ -1,56 +1,85 @@
-# EducationPerfectedAgain
+# 🎓 EducationPerfectedAgain
 
 **Automatic answer bot for Education Perfect language tasks using Puppeteer + Electron**
 
 <p align="center">
-  <img src="result.png" alt="Example" />
+  <img src="result.png" alt="Bot Screenshot" />
 </p>
 
-## Overview
+---
 
-EducationPerfected automates translation and listening tasks on [Education Perfect](https://www.educationperfect.com/). It provides a login UI, saves your credentials, and launches a full-featured answer bot in a maximized browser window.
+## 📘 Overview
 
-Modes include:
+**EducationPerfected** automates translation and listening tasks on [Education Perfect](https://www.educationperfect.com/).
 
-- **Instant** – submits answers immediately  
-- **Semi-Auto** – types answers, waits for Enter  
-- **Delayed** (default) – types answers, submits after 0–3 s  
+- ✅ Auto login via a simple UI  
+- ✅ Saves your credentials (optional delete button)  
+- ✅ Launches a control panel inside the task window top bar
+- ✅ Supports text + audio questions  
+- ✅ Learns from mistakes in real-time  
 
-It handles text and audio questions and learns from mistakes using the modal dialogs.
+### Available Modes:
+- ⚡ **Instant** – answers and submits immediately  
+- ⏸️ **Semi-Auto** – waits for you to hit Enter  
+- ⏱️ **Delayed** – default mode, submits after a short delay
 
-## Getting Started
+---
 
-**Download the latest `.zip` file from the [Releases page](https://github.com/YOUR_USERNAME/EducationPerfected/releases).**
+## 🛠 Getting Started
 
-1. Extract the zip  
+**Download the latest `.zip` from the [Releases page](https://github.com/YOUR_USERNAME/EducationPerfectedAgain/releases).**
+
+1. Extract the ZIP  
 2. Open the folder  
-3. Run `EducationPerfectedBot.exe`
+3. Run `EducationPerfectedBot.exe`  
+4. Enter your login and click **Start**
 
-You’ll see a login screen. Enter your Education Perfect credentials and click Start. Chrome will open and the bot will begin.
+Chrome will open automatically and start the bot.
 
-### ⚠️ Windows Defender or Antivirus Warning
+---
 
-Some antivirus programs (including Windows SmartScreen) may block the `.exe` because it’s unsigned.  
-If this happens:
+## ⚠️ Windows Defender / Antivirus
 
-- Click **More info**  
-- Then click **Run anyway**  
+Since this app is unsigned, Windows SmartScreen or your antivirus **might block it**.
 
-You may also need to allow it in your antivirus settings. This is normal for newly packaged apps.
+If that happens:
+- Click **More info** → **Run anyway**
+- Allow it in your antivirus or security software
 
-## Control Panel
+---
 
-Once on a task, the floating panel lets you:
+## 🧭 Control Panel Guide
 
-- 🔄 **Refresh Words** – Reload the translation dictionary for reading and writing tasks  
-- 🔊 **Refresh Audio** – Map audio clips to words for listening tasks  
-- ▶️ **Start/Stop** – Toggle the bot  
-- ⚡ / ⏸️ / ⏱️ – Choose answer mode (Instant, Semi, Delayed)
+Once inside a task, a floating panel appears:
 
-## Development
+| Icon  | Function              |
+|-------|------------------------|
+| 🔄    | **Refresh** — reloads word list and audio map *(wait for popup)*  
+| ▶️    | **Start/Stop** — toggles bot activity  
+| ⚡    | Instant — submit instantly  
+| ⏸️    | Semi-Auto — wait for Enter  
+| ⏱️    | Delayed — submit after a short delay  
 
-To build locally:
+---
+
+## 🧑‍💻 Development
 
 ```bash
 npm install
 npm run package
+```
+
+The EXE will be built into a folder called `EducationPerfectedBot`.
+
+---
+
+## 📝 Notes
+
+- Your login is saved locally unless deleted  
+- UI closes when the bot starts  
+- Chrome runs maximized and visible  
+- After clicking **Refresh**, wait for confirmation before using the bot
+
+---
+
+**Author:** André Nijman

@@ -37,44 +37,42 @@ const puppeteer = require('puppeteer');
         await page.evaluate(message => alert(message), msg);
     }
 
-    async function updateDicts() {
-        dict = {};
-        shortDict = {};
-        console.log('Cleared text dicts');
-        const base = await page.$$eval(DIR.selectors.baseWords, els => els.map(e => e.textContent));
-        const target = await page.$$eval(DIR.selectors.targetWords, els => els.map(e => e.textContent));
-        base.forEach((bRaw, i) => {
-            const t = cleanString(target[i] || '');
-            const b = cleanString(bRaw);
-            if (t && b) {
-                dict[t] = b;
-                shortDict[t] = b;
-            }
-        });
-        console.log('Text dict refreshed, entries=', Object.keys(dict).length);
-        await notify('Word lists refreshed');
-    }
-
-    async function buildAudioMap() {
+    async function refreshAll() {
+        await notify('Please wait while the bot refreshes the word lists. This may take a minute.');
         dict = {};
         shortDict = {};
         audioMap = {};
-        console.log('Cleared text dicts and audioMap');
-        const items = await page.$$('.preview-grid .stats-item');
-        for (const item of items) {
-            const icon = await item.$('.sound-icon.has-sound');
-            if (!icon) continue;
-            const rawA = await item.$eval('.baseLanguage', el => el.textContent.trim());
-            const a = cleanString(rawA);
-            await page.evaluate(el => el.click(), icon);
-            await sleep(500);
-            const src = await page.evaluate(() => window.lastAudioSrc || null);
-            if (src) {
-                audioMap[src] = a;
+
+        try {
+            const base = await page.$$eval(DIR.selectors.baseWords, els => els.map(e => e.textContent));
+            const target = await page.$$eval(DIR.selectors.targetWords, els => els.map(e => e.textContent));
+            base.forEach((bRaw, i) => {
+                const t = cleanString(target[i] || '');
+                const b = cleanString(bRaw);
+                if (t && b) {
+                    dict[t] = b;
+                    shortDict[t] = b;
+                }
+            });
+        } catch {}
+
+        try {
+            const items = await page.$$('.preview-grid .stats-item');
+            for (const item of items) {
+                const icon = await item.$('.sound-icon.has-sound');
+                if (!icon) continue;
+                const rawA = await item.$eval('.baseLanguage', el => el.textContent.trim());
+                const a = cleanString(rawA);
+                await page.evaluate(el => el.click(), icon);
+                await sleep(500);
+                const src = await page.evaluate(() => window.lastAudioSrc || null);
+                if (src) {
+                    audioMap[src] = a;
+                }
             }
-        }
-        console.log('Audio map built, entries=', Object.keys(audioMap).length);
-        await notify('Audio map refreshed');
+        } catch {}
+
+        await notify('All word lists refreshed.');
     }
 
     async function fixAnswer(lastAnswer) {
@@ -84,13 +82,10 @@ const puppeteer = require('puppeteer');
             dict[lastAnswer] = cleanString(correctText);
             await page.$eval(DIR.selectors.continueButton, btn => btn.disabled = false);
             await page.click(DIR.selectors.continueButton);
-        } catch (err) {
-            console.error('fixAnswer error', err);
-        }
+        } catch (err) {}
     }
 
     async function loopAnswers() {
-        console.log('Answer loop started');
         while (running) {
             let answer;
             let qText = '';
@@ -136,7 +131,6 @@ const puppeteer = require('puppeteer');
                 await fixAnswer(answer);
             }
         }
-        console.log('Answer loop stopped');
     }
 
     async function toggleRun() {
@@ -148,7 +142,6 @@ const puppeteer = require('puppeteer');
 
         if (running) {
             loopAnswers().catch(err => {
-                console.error(err);
                 running = false;
             });
         }
@@ -180,10 +173,10 @@ const puppeteer = require('puppeteer');
                 padding: '8px',
                 zIndex: 9999
             });
-            const icons = ['🔄', '▶️', '⚡', '⏸️', '⏱️', '🔊'];
-            const ids = ['refresh-btn', 'start-btn', 'mode-Auto', 'mode-Semi', 'mode-Delay', 'refresh-audio'];
-            const tips = ['Refresh words', 'Start/stop', 'Instant', 'Semi-auto', 'Delayed', 'Refresh audio map'];
-            const fns = [window.refresh, window.startAnswer, window.setAuto, window.setSemi, window.setDelay, window.buildAudioMap];
+            const icons = ['🔄', '▶️', '⚡', '⏸️', '⏱️'];
+            const ids = ['refresh-btn', 'start-btn', 'mode-Auto', 'mode-Semi', 'mode-Delay'];
+            const tips = ['Refresh all word lists', 'Start/stop', 'Instant', 'Semi-auto', 'Delayed'];
+            const fns = [window.refresh, window.startAnswer, window.setAuto, window.setSemi, window.setDelay];
             icons.forEach((icon, index) => {
                 const btn = document.createElement('button');
                 btn.id = ids[index];
@@ -204,7 +197,6 @@ const puppeteer = require('puppeteer');
             });
             document.body.appendChild(panel);
         }, mode);
-        console.log('Panel ready');
     }
 
     const browser = await puppeteer.launch({
@@ -223,8 +215,7 @@ const puppeteer = require('puppeteer');
         };
     });
 
-    await page.exposeFunction('refresh', updateDicts);
-    await page.exposeFunction('buildAudioMap', buildAudioMap);
+    await page.exposeFunction('refresh', refreshAll);
     await page.exposeFunction('startAnswer', toggleRun);
     await page.exposeFunction('setAuto', () => setMode('auto'));
     await page.exposeFunction('setSemi', () => setMode('semi'));
@@ -236,5 +227,4 @@ const puppeteer = require('puppeteer');
     await page.type(DIR.selectors.username, DIR.email);
     await page.type(DIR.selectors.password, DIR.password);
     await page.keyboard.press('Enter');
-    console.log('Logged in');
 })();
