@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
-const { fork } = require('child_process');
+const { spawn } = require('child_process');
 const fs = require('fs');
 
 const credsFile = path.join(app.getPath('userData'), 'creds.json');
@@ -33,11 +33,15 @@ ipcMain.on('save-creds', (event, creds) => {
 });
 
 ipcMain.on('start-script', (event, creds) => {
-  const child = fork(path.join(__dirname, 'index.js'), [creds.username, creds.password], {
+  const nodeExecutable = path.join(__dirname, 'node_modules', 'node', 'bin', 'node.exe');
+  const scriptPath = path.join(__dirname, 'puppeteer-script.js');
+
+  const subprocess = spawn(nodeExecutable, [scriptPath, creds.username, creds.password], {
     detached: true,
     stdio: 'ignore'
   });
-  child.unref();
+
+  subprocess.unref();
 
   const win = BrowserWindow.getFocusedWindow();
   if (win) win.close();
