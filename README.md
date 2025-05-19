@@ -14,7 +14,7 @@
 
 - ✅ Auto login via a simple UI  
 - ✅ Saves your credentials (optional delete button)  
-- ✅ Launches a control panel inside the task window top bar  
+- ✅ Launches a minimisable control panel inside the task window top bar  
 - ✅ Supports text + audio questions  
 - ✅ Learns from mistakes in real-time  
 
@@ -28,7 +28,7 @@
 ## 🛠 Getting Started
 
 **Download the latest `.zip` from the [Releases page](https://github.com/YOUR_USERNAME/EducationPerfectedAgain/releases).**
-1. MAKE SURE LATEST VERSION OF node.js IS INSTALLED
+1. MAKE SURE LATEST VERSION OF node.js IS INSTALLED  
 2. Extract the ZIP  
 3. Open the folder  
 4. **Run `install.cmd` once** to install Puppeteer (requires internet)  
@@ -80,8 +80,9 @@ The EXE will be built into a folder called `EducationPerfectedBot`.
 - UI closes when the bot starts  
 - Chrome runs maximized and visible  
 - After clicking **Refresh**, wait for confirmation before using the bot  
-- Puppeteer is required and gets installed with `install.cmd`
-
+- Puppeteer is required and gets installed with `install.cmd`  
+- **If the bot starts getting listening questions wrong repeatedly, try clicking 🔄 Refresh again to reload the latest audio mappings**
+  
 ---
 
 **Author:** André Nijman
