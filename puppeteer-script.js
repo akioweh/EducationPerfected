@@ -136,30 +136,13 @@ const puppeteer = require('puppeteer');
     async function toggleRun() {
         running = !running;
         await notify(running ? 'Auto-answer started' : 'Auto-answer stopped');
+        await page.evaluate(run => {
+            document.getElementById('start-btn').style.backgroundColor = run ? 'lightgreen' : '#f0f0f0';
+        }, running);
 
         if (running) {
-            await page.evaluate(() => {
-                const btn = document.getElementById('start-btn');
-                if (btn) btn.style.backgroundColor = 'lightgreen';
-                if (window.setStatus) window.setStatus(`Mode: ${window.currentMode} | Running`);
-                window.running = true;
-            });
-
-            loopAnswers().catch(async () => {
+            loopAnswers().catch(err => {
                 running = false;
-                await page.evaluate(() => {
-                    const btn = document.getElementById('start-btn');
-                    if (btn) btn.style.backgroundColor = '#f0f0f0';
-                    if (window.setStatus) window.setStatus(`Mode: ${window.currentMode} | Stopped`);
-                    window.running = false;
-                });
-            });
-        } else {
-            await page.evaluate(() => {
-                const btn = document.getElementById('start-btn');
-                if (btn) btn.style.backgroundColor = '#f0f0f0';
-                if (window.setStatus) window.setStatus(`Mode: ${window.currentMode} | Stopped`);
-                window.running = false;
             });
         }
     }
@@ -174,115 +157,45 @@ const puppeteer = require('puppeteer');
                     btn.style.backgroundColor = l.toLowerCase() === active ? 'lightgreen' : '#f0f0f0';
                 }
             });
-            if (window.setStatus) window.setStatus(`Mode: ${active} | ${window.running ? 'Running' : 'Stopped'}`);
-            window.currentMode = active;
         }, mode);
     }
 
     async function initPanel() {
         await page.evaluate(currentMode => {
             if (document.querySelector('#ep-control-panel')) return;
-
             const panel = document.createElement('div');
             panel.id = 'ep-control-panel';
             Object.assign(panel.style, {
                 position: 'fixed',
-                top: '10px',
-                left: '10px',
-                padding: '10px',
-                backgroundColor: '#fff',
-                border: '1px solid #ccc',
-                borderRadius: '8px',
-                zIndex: 9999,
-                fontFamily: 'sans-serif',
-                boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-                cursor: 'move'
+                top: '3%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                padding: '8px',
+                zIndex: 9999
             });
-
-            panel.innerHTML = `
-                <div style="margin-bottom:8px;">
-                    <button id="refresh-btn" title="Refresh all (Alt+R)">🔄</button>
-                    <button id="start-btn" title="Start/stop (Alt+S)">▶️</button>
-                    <button id="mode-Auto" title="Instant (Alt+1)">⚡</button>
-                    <button id="mode-Semi" title="Semi-auto (Alt+2)">⏸️</button>
-                    <button id="mode-Delay" title="Delayed (Alt+3)" style="background-color:lightgreen;">⏱️</button>
-                    <button id="hide-panel" title="Hide panel">❌</button>
-                </div>
-                <div id="status-line" style="font-size:12px; color:#333;">
-                    Mode: ${currentMode} | Stopped
-                </div>
-                <div style="font-size:11px; color:#666; margin-top:6px;">Alt+S to start/stop</div>
-            `;
-
-            document.body.appendChild(panel);
-
-            // Drag logic
-            panel.onmousedown = function (e) {
-                e.preventDefault();
-                let shiftX = e.clientX - panel.getBoundingClientRect().left;
-                let shiftY = e.clientY - panel.getBoundingClientRect().top;
-
-                function moveAt(pageX, pageY) {
-                    panel.style.left = pageX - shiftX + 'px';
-                    panel.style.top = pageY - shiftY + 'px';
-                }
-
-                function onMouseMove(e) {
-                    moveAt(e.pageX, e.pageY);
-                }
-
-                document.addEventListener('mousemove', onMouseMove);
-
-                panel.onmouseup = function () {
-                    document.removeEventListener('mousemove', onMouseMove);
-                    panel.onmouseup = null;
-                };
-            };
-
-            panel.ondragstart = () => false;
-
-            const setStatus = msg => {
-                const el = document.getElementById('status-line');
-                if (el) el.textContent = msg;
-            };
-            window.setStatus = setStatus;
-            window.currentMode = currentMode;
-            window.running = false;
-
-            document.getElementById('refresh-btn').onclick = window.refresh;
-            document.getElementById('start-btn').onclick = window.startAnswer;
-            document.getElementById('mode-Auto').onclick = window.setAuto;
-            document.getElementById('mode-Semi').onclick = window.setSemi;
-            document.getElementById('mode-Delay').onclick = window.setDelay;
-
-            document.getElementById('hide-panel').onclick = () => {
-                panel.style.display = 'none';
-                const showBtn = document.createElement('button');
-                showBtn.textContent = '📋';
-                showBtn.title = 'Show panel';
-                Object.assign(showBtn.style, {
-                    position: 'fixed',
-                    top: '10px',
-                    right: '10px',
-                    zIndex: 9999,
-                    padding: '4px',
-                    fontSize: '16px'
+            const icons = ['🔄', '▶️', '⚡', '⏸️', '⏱️'];
+            const ids = ['refresh-btn', 'start-btn', 'mode-Auto', 'mode-Semi', 'mode-Delay'];
+            const tips = ['Refresh all word lists', 'Start/stop', 'Instant', 'Semi-auto', 'Delayed'];
+            const fns = [window.refresh, window.startAnswer, window.setAuto, window.setSemi, window.setDelay];
+            icons.forEach((icon, index) => {
+                const btn = document.createElement('button');
+                btn.id = ids[index];
+                btn.textContent = icon;
+                btn.title = tips[index];
+                Object.assign(btn.style, {
+                    margin: '4px',
+                    padding: '6px 10px',
+                    borderRadius: '6px',
+                    border: '1px solid #aaa',
+                    backgroundColor: ids[index] === 'mode-Delay' ? 'lightgreen' : '#f0f0f0',
+                    cursor: 'pointer'
                 });
-                showBtn.onclick = () => {
-                    panel.style.display = 'block';
-                    showBtn.remove();
-                };
-                document.body.appendChild(showBtn);
-            };
-
-            document.addEventListener('keydown', e => {
-                if (!e.altKey) return;
-                if (e.key.toLowerCase() === 'r') window.refresh();
-                if (e.key.toLowerCase() === 's') window.startAnswer();
-                if (e.key === '1') window.setAuto();
-                if (e.key === '2') window.setSemi();
-                if (e.key === '3') window.setDelay();
+                btn.onclick = fns[index];
+                btn.onmouseover = () => btn.style.backgroundColor = '#e0e0e0';
+                btn.onmouseout = () => btn.style.backgroundColor = ids[index] === 'mode-Delay' ? 'lightgreen' : '#f0f0f0';
+                panel.appendChild(btn);
             });
+            document.body.appendChild(panel);
         }, mode);
     }
 
