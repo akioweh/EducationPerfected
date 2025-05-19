@@ -1,10 +1,9 @@
 const puppeteer = require('puppeteer');
 
 (async () => {
-    // Configuration and selectors used throughout the script
     const DIR = {
-        email: '//EMAIL GOES HERE//',
-        password: '//PASSWORD GOES HERE//',
+        email: process.argv[2],
+        password: process.argv[3],
         loginUrl: 'https://app.educationperfect.com/app/login',
         selectors: {
             username: '#loginId',
@@ -24,28 +23,20 @@ const puppeteer = require('puppeteer');
 
     let dict = {}, shortDict = {}, audioMap = {};
     let running = false;
-    let mode = 'delay'; // default mode: delayed answering
+    let mode = 'delay';
 
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-
-    // Cleans up a given string: removes parentheticals and trims
     const cleanString = s => String(s).replace(/\([^)]*\)/g, '').split(/[;,|]/)[0].trim();
-
-    // Generates a random string between min and max length
     const randStr = (min, max) => {
         const len = Math.floor(Math.random() * (max - min + 1)) + min;
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        return Array.from({ length: len })
-            .map(() => chars[Math.floor(Math.random() * chars.length)])
-            .join('');
+        return Array.from({ length: len }).map(() => chars[Math.floor(Math.random() * chars.length)]).join('');
     };
 
-    // Shows a browser alert with the provided message
     async function notify(msg) {
         await page.evaluate(message => alert(message), msg);
     }
 
-    // Refreshes text dictionaries based on page content
     async function updateDicts() {
         dict = {};
         shortDict = {};
@@ -64,14 +55,12 @@ const puppeteer = require('puppeteer');
         await notify('Word lists refreshed');
     }
 
-    // Builds a map from audio src to base language word
     async function buildAudioMap() {
         dict = {};
         shortDict = {};
         audioMap = {};
         console.log('Cleared text dicts and audioMap');
         const items = await page.$$('.preview-grid .stats-item');
-        console.log('buildAudioMap: items=', items.length);
         for (const item of items) {
             const icon = await item.$('.sound-icon.has-sound');
             if (!icon) continue;
@@ -80,7 +69,6 @@ const puppeteer = require('puppeteer');
             await page.evaluate(el => el.click(), icon);
             await sleep(500);
             const src = await page.evaluate(() => window.lastAudioSrc || null);
-            console.log('buildAudioMap: mapped', a, '(', src, ')');
             if (src) {
                 audioMap[src] = a;
             }
@@ -89,18 +77,10 @@ const puppeteer = require('puppeteer');
         await notify('Audio map refreshed');
     }
 
-    // Corrects the answer using the modal if available
     async function fixAnswer(lastAnswer) {
         try {
-            await page.waitForFunction(
-                sel => document.querySelector(sel)?.textContent.trim().length > 0,
-                {},
-                DIR.selectors.modalFields.question
-            );
-            const correctText = await page.$eval(
-                DIR.selectors.modalFields.correct,
-                el => el.textContent
-            );
+            await page.waitForFunction(sel => document.querySelector(sel)?.textContent.trim().length > 0, {}, DIR.selectors.modalFields.question);
+            const correctText = await page.$eval(DIR.selectors.modalFields.correct, el => el.textContent);
             dict[lastAnswer] = cleanString(correctText);
             await page.$eval(DIR.selectors.continueButton, btn => btn.disabled = false);
             await page.click(DIR.selectors.continueButton);
@@ -109,22 +89,16 @@ const puppeteer = require('puppeteer');
         }
     }
 
-    // Main loop for auto-answering questions
     async function loopAnswers() {
         console.log('Answer loop started');
         while (running) {
             let answer;
             let qText = '';
             try {
-                qText = await page.$eval(
-                    DIR.selectors.questionText,
-                    el => el.textContent.trim()
-                );
+                qText = await page.$eval(DIR.selectors.questionText, el => el.textContent.trim());
             } catch {}
 
             if (qText) {
-                // Handle text question
-                console.log('Text question:', qText);
                 const cleaned = cleanString(qText);
                 if (dict[cleaned]) {
                     answer = dict[cleaned];
@@ -135,10 +109,7 @@ const puppeteer = require('puppeteer');
                 } else {
                     answer = randStr(8, 10);
                 }
-                console.log('Using text answer:', answer);
             } else {
-                // Handle audio question
-                console.log('Audio question');
                 let src = null;
                 try {
                     const speaker = await page.$('.voice-speaker');
@@ -146,11 +117,9 @@ const puppeteer = require('puppeteer');
                         await page.evaluate(el => el.click(), speaker);
                         await sleep(500);
                         src = await page.evaluate(() => window.lastAudioSrc || null);
-                        console.log('Detected src:', src);
                     }
                 } catch {}
                 answer = (src && audioMap[src]) || randStr(8, 10);
-                console.log('Using audio answer:', answer);
             }
 
             await page.click(DIR.selectors.answerInput, { clickCount: 3 });
@@ -170,14 +139,13 @@ const puppeteer = require('puppeteer');
         console.log('Answer loop stopped');
     }
 
-    // Starts or stops the auto-answer loop
     async function toggleRun() {
         running = !running;
         await notify(running ? 'Auto-answer started' : 'Auto-answer stopped');
-        await page.evaluate(
-            run => document.getElementById('start-btn').style.backgroundColor = run ? 'lightgreen' : '#f0f0f0',
-            running
-        );
+        await page.evaluate(run => {
+            document.getElementById('start-btn').style.backgroundColor = run ? 'lightgreen' : '#f0f0f0';
+        }, running);
+
         if (running) {
             loopAnswers().catch(err => {
                 console.error(err);
@@ -186,7 +154,6 @@ const puppeteer = require('puppeteer');
         }
     }
 
-    // Sets the answering mode and updates UI button highlights
     async function setMode(newMode) {
         mode = newMode;
         await notify(`Mode: ${newMode}`);
@@ -200,7 +167,6 @@ const puppeteer = require('puppeteer');
         }, mode);
     }
 
-    // Injects the control panel UI into the webpage
     async function initPanel() {
         await page.evaluate(currentMode => {
             if (document.querySelector('#ep-control-panel')) return;
@@ -241,21 +207,22 @@ const puppeteer = require('puppeteer');
         console.log('Panel ready');
     }
 
-    // Launch browser and go to login page
-    const browser = await puppeteer.launch({ headless: false, defaultViewport: null });
+    const browser = await puppeteer.launch({
+        headless: false,
+        defaultViewport: null,
+        args: ['--start-maximized']
+    });
     const [page] = await browser.pages();
 
-    // Monkey-patch audio play to capture audio src
     await page.evaluateOnNewDocument(() => {
         window.lastAudioSrc = null;
         const origPlay = HTMLAudioElement.prototype.play;
-        HTMLAudioElement.prototype.play = function() {
+        HTMLAudioElement.prototype.play = function () {
             window.lastAudioSrc = this.src;
             return origPlay.call(this);
         };
     });
 
-    // Expose control functions to the page
     await page.exposeFunction('refresh', updateDicts);
     await page.exposeFunction('buildAudioMap', buildAudioMap);
     await page.exposeFunction('startAnswer', toggleRun);
@@ -264,7 +231,6 @@ const puppeteer = require('puppeteer');
     await page.exposeFunction('setDelay', () => setMode('delay'));
     page.on('load', initPanel);
 
-    // Perform login
     await page.goto(DIR.loginUrl);
     await page.waitForSelector(DIR.selectors.username);
     await page.type(DIR.selectors.username, DIR.email);

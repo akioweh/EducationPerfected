@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>EP Bot</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: #f5f5f5;
+    }
+
+    form {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      width: 320px;
+      box-sizing: border-box;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .desc {
+      text-align: center;
+      max-width: 300px;
+      font-size: 14px;
+      color: #555;
+      margin: 5px auto 15px auto;
+    }
+
+    input {
+      padding: 12px;
+      margin-bottom: 15px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      padding: 12px;
+      background: #007bff;
+      color: white;
+      border: none;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    #status {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #333;
+      text-align: center;
+    }
+
+    .link-button {
+      text-align: center;
+      font-size: 13px;
+      color: #007bff;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .link-button:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <form id="loginForm">
+    <h2>Education Perfect Bot</h2>
+    <p class="desc">
+      Enter your Education Perfect login details so the bot can automatically log in and complete language tasks.
+    </p>
+    <p class="desc">
+      This bot is for educational purposes only. Use it responsibly.
+      This is only used to learn how to use the Electron framework and JavaScript.
+      The author is not responsible for any misuse of this bot.
+    </p>
+    <input type="text" id="username" placeholder="Username" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <button type="submit">Start</button>
+    <div class="link-button" id="deleteCreds">Delete saved credentials</div>
+    <div id="status"></div>
+  </form>
+
+  <script>
+    const { ipcRenderer } = require('electron');
+
+    window.onload = async () => {
+      const saved = await ipcRenderer.invoke('load-creds');
+      if (saved.username) document.getElementById('username').value = saved.username;
+      if (saved.password) document.getElementById('password').value = saved.password;
+    };
+
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      document.getElementById('status').textContent = "Running...";
+      ipcRenderer.send('save-creds', { username, password });
+      ipcRenderer.send('start-script', { username, password });
+    });
+
+    document.getElementById('deleteCreds').addEventListener('click', () => {
+      ipcRenderer.send('delete-creds');
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+      document.getElementById('status').textContent = "Saved credentials deleted.";
+    });
+  </script>
+</body>
+</html>
