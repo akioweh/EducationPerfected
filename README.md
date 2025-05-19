@@ -28,12 +28,12 @@
 ## 🛠 Getting Started
 
 **Download the latest `.zip` from the [Releases page](https://github.com/YOUR_USERNAME/EducationPerfectedAgain/releases).**
-
-1. Extract the ZIP  
-2. Open the folder  
-3. **Run `install.cmd` once** to install Puppeteer (requires internet)  
-4. Run `EducationPerfectedBot.exe`  
-5. Enter your login and click **Start**
+1. MAKE SURE LATEST VERSION OF node.js IS INSTALLED
+2. Extract the ZIP  
+3. Open the folder  
+4. **Run `install.cmd` once** to install Puppeteer (requires internet)  
+5. Run `EducationPerfectedBot.exe`  
+6. Enter your login and click **Start**
 
 Chrome will open automatically and start the bot.
 
