@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 
 (async () => {
+    // Configuration and selectors used throughout the script
     const DIR = {
         email: '//EMAIL GOES HERE//',
         password: '//PASSWORD GOES HERE//',
@@ -23,10 +24,14 @@ const puppeteer = require('puppeteer');
 
     let dict = {}, shortDict = {}, audioMap = {};
     let running = false;
-    let mode = 'delay';
+    let mode = 'delay'; // default mode: delayed answering
 
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+    // Cleans up a given string: removes parentheticals and trims
     const cleanString = s => String(s).replace(/\([^)]*\)/g, '').split(/[;,|]/)[0].trim();
+
+    // Generates a random string between min and max length
     const randStr = (min, max) => {
         const len = Math.floor(Math.random() * (max - min + 1)) + min;
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -35,12 +40,13 @@ const puppeteer = require('puppeteer');
             .join('');
     };
 
+    // Shows a browser alert with the provided message
     async function notify(msg) {
         await page.evaluate(message => alert(message), msg);
     }
 
+    // Refreshes text dictionaries based on page content
     async function updateDicts() {
-        // reset text dictionaries only
         dict = {};
         shortDict = {};
         console.log('Cleared text dicts');
@@ -58,8 +64,8 @@ const puppeteer = require('puppeteer');
         await notify('Word lists refreshed');
     }
 
+    // Builds a map from audio src to base language word
     async function buildAudioMap() {
-        // reset both dicts
         dict = {};
         shortDict = {};
         audioMap = {};
@@ -83,6 +89,7 @@ const puppeteer = require('puppeteer');
         await notify('Audio map refreshed');
     }
 
+    // Corrects the answer using the modal if available
     async function fixAnswer(lastAnswer) {
         try {
             await page.waitForFunction(
@@ -102,11 +109,11 @@ const puppeteer = require('puppeteer');
         }
     }
 
+    // Main loop for auto-answering questions
     async function loopAnswers() {
         console.log('Answer loop started');
         while (running) {
             let answer;
-            // detect text question
             let qText = '';
             try {
                 qText = await page.$eval(
@@ -116,6 +123,7 @@ const puppeteer = require('puppeteer');
             } catch {}
 
             if (qText) {
+                // Handle text question
                 console.log('Text question:', qText);
                 const cleaned = cleanString(qText);
                 if (dict[cleaned]) {
@@ -129,6 +137,7 @@ const puppeteer = require('puppeteer');
                 }
                 console.log('Using text answer:', answer);
             } else {
+                // Handle audio question
                 console.log('Audio question');
                 let src = null;
                 try {
@@ -161,6 +170,7 @@ const puppeteer = require('puppeteer');
         console.log('Answer loop stopped');
     }
 
+    // Starts or stops the auto-answer loop
     async function toggleRun() {
         running = !running;
         await notify(running ? 'Auto-answer started' : 'Auto-answer stopped');
@@ -176,6 +186,7 @@ const puppeteer = require('puppeteer');
         }
     }
 
+    // Sets the answering mode and updates UI button highlights
     async function setMode(newMode) {
         mode = newMode;
         await notify(`Mode: ${newMode}`);
@@ -189,6 +200,7 @@ const puppeteer = require('puppeteer');
         }, mode);
     }
 
+    // Injects the control panel UI into the webpage
     async function initPanel() {
         await page.evaluate(currentMode => {
             if (document.querySelector('#ep-control-panel')) return;
@@ -229,11 +241,11 @@ const puppeteer = require('puppeteer');
         console.log('Panel ready');
     }
 
-    // launch
+    // Launch browser and go to login page
     const browser = await puppeteer.launch({ headless: false, defaultViewport: null });
     const [page] = await browser.pages();
 
-    // intercept audio
+    // Monkey-patch audio play to capture audio src
     await page.evaluateOnNewDocument(() => {
         window.lastAudioSrc = null;
         const origPlay = HTMLAudioElement.prototype.play;
@@ -243,7 +255,7 @@ const puppeteer = require('puppeteer');
         };
     });
 
-    // expose functions
+    // Expose control functions to the page
     await page.exposeFunction('refresh', updateDicts);
     await page.exposeFunction('buildAudioMap', buildAudioMap);
     await page.exposeFunction('startAnswer', toggleRun);
@@ -252,7 +264,7 @@ const puppeteer = require('puppeteer');
     await page.exposeFunction('setDelay', () => setMode('delay'));
     page.on('load', initPanel);
 
-    // login
+    // Perform login
     await page.goto(DIR.loginUrl);
     await page.waitForSelector(DIR.selectors.username);
     await page.type(DIR.selectors.username, DIR.email);
