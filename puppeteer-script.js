@@ -72,7 +72,12 @@ const puppeteer = require('puppeteer');
             }
         } catch {}
 
-        let message = 'All word lists refreshed:\n';
+        let totalEntries = Object.keys(dict).length;
+        let entriesWithAudio = Object.values(dict).filter(v =>
+            Object.values(audioMap).includes(v)
+        ).length;
+
+        let message = `All word lists refreshed:\nTotal entries: ${totalEntries}\nWith audio: ${entriesWithAudio}\n\n`;
         for (const [k, v] of Object.entries(dict)) {
             const link = Object.entries(audioMap).find(([, word]) => word === v)?.[0] || 'no audio';
             message += `${k} → ${v} (${link})\n`;
@@ -122,7 +127,7 @@ const puppeteer = require('puppeteer');
                     }
                 } catch {}
                 answer = (src && audioMap[src]) || randStr(8, 10);
-                await notify(`Audio question: src="${src}"\nAnswer: "${answer}"`);
+               // await notify(`Audio question: src="${src}"\nAnswer: "${answer}"`);
             }
 
             await page.click(DIR.selectors.answerInput, { clickCount: 3 });
