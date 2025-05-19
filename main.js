@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
-const { spawn } = require('child_process');
+const { fork } = require('child_process');
 const fs = require('fs');
 
 const credsFile = path.join(app.getPath('userData'), 'creds.json');
@@ -33,20 +33,15 @@ ipcMain.on('save-creds', (event, creds) => {
 });
 
 ipcMain.on('start-script', (event, creds) => {
-  const subprocess = spawn(
-    'node',
-    [path.join(__dirname, 'index.js'), creds.username, creds.password],
-    {
-      detached: true,
-      stdio: 'ignore'
-    }
-  );
-  subprocess.unref();
+  const child = fork(path.join(__dirname, 'index.js'), [creds.username, creds.password], {
+    detached: true,
+    stdio: 'ignore'
+  });
+  child.unref();
 
   const win = BrowserWindow.getFocusedWindow();
   if (win) win.close();
 });
-
 
 ipcMain.on('delete-creds', () => {
   if (fs.existsSync(credsFile)) {
