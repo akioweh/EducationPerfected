@@ -2,8 +2,8 @@ const puppeteer = require('puppeteer');
 
 (async () => {
     const DIR = {
-        email: '##EMAIL##',
-        password: '##PASSWORD##',
+        email: '//EMAIL GOES HERE//',
+        password: '//PASSWORD GOES HERE//',
         loginUrl: 'https://app.educationperfect.com/app/login',
         selectors: {
             username: '#loginId',
@@ -117,7 +117,16 @@ const puppeteer = require('puppeteer');
 
             if (qText) {
                 console.log('Text question:', qText);
-                answer = dict[qText] || shortDict[cleanString(qText)] || randStr(8, 10);
+                const cleaned = cleanString(qText);
+                if (dict[cleaned]) {
+                    answer = dict[cleaned];
+                } else if (shortDict[cleaned]) {
+                    answer = shortDict[cleaned];
+                } else if (Object.values(dict).includes(cleaned)) {
+                    answer = Object.keys(dict).find(k => dict[k] === cleaned);
+                } else {
+                    answer = randStr(8, 10);
+                }
                 console.log('Using text answer:', answer);
             } else {
                 console.log('Audio question');
