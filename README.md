@@ -14,14 +14,14 @@
 
 - ✅ Auto login via a simple UI  
 - ✅ Saves your credentials (optional delete button)  
-- ✅ Launches a control panel inside the task window top bar
+- ✅ Launches a control panel inside the task window top bar  
 - ✅ Supports text + audio questions  
 - ✅ Learns from mistakes in real-time  
 
 ### Available Modes:
 - ⚡ **Instant** – answers and submits immediately  
 - ⏸️ **Semi-Auto** – waits for you to hit Enter  
-- ⏱️ **Delayed** – default mode, submits after a short delay
+- ⏱️ **Delayed** – default mode, submits after a short delay  
 
 ---
 
@@ -31,8 +31,9 @@
 
 1. Extract the ZIP  
 2. Open the folder  
-3. Run `EducationPerfectedBot.exe`  
-4. Enter your login and click **Start**
+3. **Run `install.cmd` once** to install Puppeteer (requires internet)  
+4. Run `EducationPerfectedBot.exe`  
+5. Enter your login and click **Start**
 
 Chrome will open automatically and start the bot.
 
@@ -78,7 +79,8 @@ The EXE will be built into a folder called `EducationPerfectedBot`.
 - Your login is saved locally unless deleted  
 - UI closes when the bot starts  
 - Chrome runs maximized and visible  
-- After clicking **Refresh**, wait for confirmation before using the bot
+- After clicking **Refresh**, wait for confirmation before using the bot  
+- Puppeteer is required and gets installed with `install.cmd`
 
 ---
 
