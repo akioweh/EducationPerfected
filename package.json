@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "package": "electron-packager . EducationPerfectedBot --platform=win32 --arch=x64 --overwrite --out=dist --icon=icon.ico"
+    "package": "electron-packager . tempbot --platform=win32 --arch=x64 --overwrite --icon=icon.ico --prune=true --asar --out=. && ren tempbot-win32-x64 EducationPerfectedBot"
   },
   "keywords": [],
   "author": "",

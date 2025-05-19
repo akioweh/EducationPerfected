@@ -1,73 +1,58 @@
-# EducationPerfected
+# EducationPerfectedAgain
 
-**Automatic answer bot for Education Perfect language tasks using Puppeteer**
+**Automatic answer bot for Education Perfect language tasks using Puppeteer + Electron**
 
 <p align="center">
   <img src="result.png" alt="Example" />
 </p>
 
-## Introduction
+## Overview
 
-EducationPerfected automates translation and listening tasks on [Education Perfect](https://www.educationperfect.com/). It logs you in, injects a floating control panel, and answers questions in one of three modes:
+EducationPerfected automates translation and listening tasks on [Education Perfect](https://www.educationperfect.com/). It provides a login UI, saves your credentials, and launches a full-featured answer bot in a maximized browser window.
 
-* **Instant**: submits answers immediately
-* **Semi-Auto**: types answers and waits for you to press Enter
-* **Delayed** (default): types answers then submits after a random 0–3 s delay
+Modes include:
 
-For listening questions it builds the audio map by clicking each speaker icon in turn (with a short delay), then matches the audio URL against its dictionary. It also learns from mistakes via modal dialogs and updates its dictionary on the fly.
+- **Instant** – submits answers immediately  
+- **Semi-Auto** – types answers, waits for Enter  
+- **Delayed** (default) – types answers, submits after 0–3 s  
 
-## Installation
+It handles text and audio questions and learns from mistakes using the modal dialogs.
 
-1. Clone or download this repo.
+## Getting Started
 
-2. Install [Node.js](https://nodejs.org/) v14+.
+**Download the latest `.zip` file from the [Releases page](https://github.com/YOUR_USERNAME/EducationPerfected/releases).**
 
-3. In the project folder, in a terminal run:
+1. Extract the zip.  
+2. Open the folder.  
+3. Run `EducationPerfectedBot.exe`.
 
-   ```bash
-   npm install puppeteer
-   ```
+You’ll see a login screen. Enter your Education Perfect credentials and click start. Chrome will open and the bot will begin.
 
-4. Open `index.js` and set your `email` and `password` in the `DIR` config at the top.
+## Control Panel
 
-## Usage
+Once on a task, the floating panel lets you:
 
-1. Run this command in the project folder terminal:
-
-   ```bash
-   node index.js
-   ```
-
-2. A Chrome window opens and logs you in automatically.
-
-3. On any task page, use the floating panel:
-
-   * 🔄 **Refresh Words**: clears and reloads the text translation dictionary
-   * 🔊 **Refresh Audio**: clears dictionaries and rebuilds audio map by automatically clicking each speaker icon
-   * ▶️ **Start/Stop**: begin or end auto-answering
-   * ⚡ **Instant** / ⏸️ **Semi-Auto** / ⏱️ **Delayed**: choose how answers are submitted
-
-3. When done, close the browser or hit Ctrl +C in your terminal.
-
-## Features
-
-* **Translation & Listening** support
-* **Audio map builder** via automatic controlled clicks and playback capture
-* **Control Panel** with clear icons and tooltips
-* **Instant**, **Semi‑Auto**, and **Delayed** submission modes
-* **Auto‑Learn** from wrong answers via modal dialogs
-* **Dictionary reset** on each refresh to avoid stale entries
-* **No custom timeouts** — uses default Puppeteer settings
+- 🔄 **Refresh Words** – Reload the translation dictionary for reading and writing tasks
+- 🔊 **Refresh Audio** – Map audio clips to words for listening tasks
+- ▶️ **Start/Stop** – Toggle the bot  
+- ⚡ / ⏸️ / ⏱️ – Choose answer mode (Instant, Semi, Delayed)
 
 ## Development
 
-* Main code in `index.js` (v1.11+)
-* Uses `page.exposeFunction` to bind panel controls
-* Clean, commented code with simple helper functions
+To build locally:
 
-## Future Plans
+```bash
+npm install
+npm run package
+```
 
-* User‑configurable delay ranges
+The packaged bot will appear in a folder named `EducationPerfectedBot`.
+
+## Notes
+
+- Login details are saved locally unless deleted  
+- The login UI closes when the bot launches  
+- Browser runs in non-headless, maximized mode  
 
 ---
 
