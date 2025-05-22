@@ -28,7 +28,7 @@
 ## 🛠 Getting Started
 
 **Download the latest `.zip` for your platform from the [Releases page](https://github.com/AndreNijman/EducationPerfectedAgain/releases).**
-1. MAKE SURE LATEST VERSION OF node.js IS INSTALLED  
+1. MAKE SURE LATEST VERSION OF node.js IS INSTALLED ⚠️⚠️⚠️
 2. Extract the ZIP  
 3. Open the folder  
 4. **Run `install.cmd` once** to install Puppeteer (requires internet)  
