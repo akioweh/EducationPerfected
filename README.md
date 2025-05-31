@@ -1,24 +1,26 @@
-# 🎓 EducationPerfectedAgain
-
-**Automatic answer bot for Education Perfect language tasks using Puppeteer + Electron**
-
-<p align="center">
+# 🎓 SimplyPerfected
+<p align="top">
   <img src="result.png" alt="Bot Screenshot" />
 </p>
 
 ---
 
 ## 📘 Overview
+> [!CAUTION]
+> Multi-word terms in a target language can cause issues with audio related tasks.
 
-**EducationPerfected** automates translation and listening tasks on [Education Perfect](https://www.educationperfect.com/).
+**SimplyPerfected** automates translation and listening tasks on [Education Perfect](https://www.educationperfect.com/).
 
-- ✅ Auto login via a simple UI  
-- ✅ Saves your credentials (optional delete button)  
-- ✅ Launches a minimisable control panel inside the task window top bar  
-- ✅ Supports text + audio questions  
-- ✅ Learns from mistakes in real-time  
+- ✅ Launches a minimisable control panel inside the task window top bar
+- ✅ Supports text + audio questions
+- ✅ Learns from mistakes in real-time
 
-### Available Modes:
+**SimplyPerfected** adds on top of **EducationPerfectedAgain**:
+- All modes support
+- Lighter package
+- Bug Fixes
+
+**Available Modes**:
 - ⚡ **Instant** – answers and submits immediately  
 - ⏸️ **Semi-Auto** – waits for you to hit Enter  
 - ⏱️ **Delayed** – default mode, submits after a short delay  
@@ -27,27 +29,18 @@
 
 ## 🛠 Getting Started
 
-**Download the latest `.zip` for your platform from the [Releases page](https://github.com/AndreNijman/EducationPerfectedAgain/releases).**
-1. MAKE SURE LATEST VERSION OF node.js IS INSTALLED ⚠️⚠️⚠️
-2. Extract the ZIP  
-3. Open the folder  
-4. **Run `install.cmd` once** to install Puppeteer (requires internet)  
-5. Run `EducationPerfectedBot.exe`  
-6. Enter your login and click **Start**
+**Download the latest `.zip` from the Releases Page.**
+1. Ensure node.js is installed ⚠️⚠️⚠️
+2. Extract the ZIP
+4. **Run `install.cmd` on first launch** to install Puppeteer, a dependency.
+5. Run `SimplyPerfected.cmd` to start.
 
-Chrome will open automatically and start the bot.
-
----
-
-## ⚠️ Windows Defender / Antivirus
-
-Since this app is unsigned, Windows SmartScreen or your antivirus **might block it**.
-
-If that happens:
-- Click **More info** → **Run anyway**
-- Allow it in your antivirus or security software
-
----
+## 🗒️ Usage
+1. Open a translation task
+2. **Select a mode first (e.g. Reading, Dictation etc.)**
+3. Press the refresh button or Alt+R to add the words and audio to the database
+4. Press start on the mode and start the bot
+5. Refresh the bot when you change modes or when you change lists
 
 ## 🧭 Control Panel Guide
 
@@ -63,41 +56,19 @@ Once inside a task, a floating panel appears:
 
 ---
 
-## 🧑‍💻 Development
-
-```bash
-npm install
-npm run package
-```
-
-The EXE will be built into a folder called `EducationPerfectedBot`.
-
----
-
-## 📝 Notes
-
-- Your login is saved locally unless deleted  
-- UI closes when the bot starts  
-- Chrome runs maximized and visible  
-- After clicking **Refresh**, wait for confirmation before using the bot  
-- Puppeteer is required and gets installed with `install.cmd`  
-- **If the bot starts getting listening questions wrong repeatedly, try clicking 🔄 Refresh again to reload the latest audio mappings**
-  
----
-
 **Author:** André Nijman
+
+**Forker:** Untitled Programmer (JustSoftware)
 
 
 ---
 
 ## ⚖️ Disclaimer
 
-This project is provided for **educational purposes only** — to demonstrate and explore how tools like **Electron**, **Puppeteer**, and **Node.js** can be used to automate browser tasks, build desktop apps, and document technical workflows.
+This project is provided for **educational purposes only** — to demonstrate and explore how tools like, **Puppeteer**, and **Node.js** can be used to automate browser tasks, build desktop apps, and document technical workflows.
 
 By using this software, you agree that:
 
-- ❌ The author (**André Nijman**) is **not responsible** for how you use this bot.  
+- ❌ The author (**André Nijman**) and forker (**Untitled Glacier**) are **not responsible** for how you use this bot.  
 - ❌ Any misuse, such as violating platform rules or using it dishonestly, is **your responsibility**.  
 - ✅ This tool is meant for learning, testing, and teaching automation concepts only.
-
-Use it responsibly.
