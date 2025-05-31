@@ -217,7 +217,7 @@ const puppeteer = require('puppeteer');
             const statusLine = `Mode: ${window.currentMode}`;
 
             panel.innerHTML = `
-                <div id="status-line" style="font-size:24px; color:#333; margin-bottom:8px;">FullyPerfected v1.0</div>
+                <div id="status-line" style="font-size:24px; color:#333; margin-bottom:8px;">SimplyPerfected v1.0</div>
                 <div style="margin-bottom:8px;">
                     <button id="refresh-btn" title="Refresh all (Alt+R)">🔄</button>
                     <button id="start-btn" title="Start/stop (Alt+S)">▶️</button>
