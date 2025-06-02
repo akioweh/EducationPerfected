@@ -65,23 +65,23 @@ const puppeteer = require('puppeteer');
                 const rawA = await item.$eval('.baseLanguage', el => el.textContent.trim());
                 const a = cleanString(rawA);
                 await page.evaluate(el => el.click(), icon);
-                await sleep(300);
+                await sleep(500);
                 const src = await page.evaluate(() => window.lastAudioSrc || null);
                 if (src) {
                     audioMap[src] = a;
                 }
             }
         } catch {}
-        
+
         question_mode = await page.evaluate(() => {
             return document.querySelectorAll('.selected[ng-click="starter.selectLearningMode(item)"]')[0].children[1].children[0].children[0].textContent.toString();
         });
-        
+
         let totalEntries = Object.keys(dict).length;
         let entriesWithAudio = Object.values(dict).filter(v =>
             Object.values(audioMap).includes(v)
         ).length;
-        
+
         let message = `All word lists refreshed:\nTotal entries: ${totalEntries}\nWith audio: ${entriesWithAudio}\n\n`;
         // for (const [k, v] of Object.entries(dict)) {
         //     const link = Object.entries(audioMap).find(([, word]) => word === v)?.[0] || 'no audio';
@@ -106,7 +106,7 @@ const puppeteer = require('puppeteer');
 
     async function loopAnswers() {
         let answer;
-        let lastqText;
+        let last_answer;
         let qText = '';
 
         if ((question_mode === 'Dictation' || question_mode === 'Listening') && mode !== "auto") {
@@ -133,7 +133,7 @@ const puppeteer = require('puppeteer');
                     const speaker = await page.$('.voice-speaker');
                     if (speaker) {
                         await page.evaluate(el => el.click(), speaker);
-                        await sleep(300);
+                        await sleep(500);
                         src = await page.evaluate(() => window.lastAudioSrc || null);
                     }
                 } catch {}
@@ -144,10 +144,16 @@ const puppeteer = require('puppeteer');
                 }
             //    await notify(`Audio question: src="${src}"\nAnswer: "${answer}"`);
             }
+            
+            if (answer === last_answer) {
+                continue;
+            } else {
+                last_answer = answer;
+            }
 
             await page.click(DIR.selectors.answerInput, { clickCount: 3 });
             await page.keyboard.sendCharacter(answer);
-
+            
             if (mode === 'auto') {
                 await page.keyboard.press('Enter');
             } else if (mode === 'delay') {
@@ -168,7 +174,7 @@ const puppeteer = require('puppeteer');
             document.getElementById('start-btn').style.backgroundColor = run ? 'lightgreen' : '#f0f0f0';
             document.getElementById('ep-control-panel').style.backgroundColor = run ? 'lightgreen' : '#fff';
         }, running);
-        
+
         if (running) {
             await loopAnswers().catch(err => {
                 running = false;
@@ -217,7 +223,7 @@ const puppeteer = require('puppeteer');
             const statusLine = `Mode: ${window.currentMode}`;
 
             panel.innerHTML = `
-                <div id="status-line" style="font-size:24px; color:#333; margin-bottom:8px;">SimplyPerfected v1.0</div>
+                <div id="status-line" style="font-size:24px; color:#333; margin-bottom:8px;">SimplyPerfected v1.0.1</div>
                 <div style="margin-bottom:8px;">
                     <button id="refresh-btn" title="Refresh all (Alt+R)">🔄</button>
                     <button id="start-btn" title="Start/stop (Alt+S)">▶️</button>
