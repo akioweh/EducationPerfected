@@ -59,7 +59,7 @@ const puppeteer = require('puppeteer');
             await page.keyboard.press('Enter');
 
             console.log('Waiting for home page to load...');
-            await page.waitForSelector(DIR.home_css, { timeout: 0 });
+            // await page.waitForSelector(DIR.home_css, { timeout: 0 });
             console.log('EP Home page loaded; Logged in.');
 
 
