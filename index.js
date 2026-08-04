@@ -133,6 +133,7 @@ const puppeteer = require('puppeteer');
 
                 // update/correct answer dictionary
                 fullDict[question] = modalCutAnswer;
+                cutDict[cleanString(question)] = modalCutAnswer;
 
                 // logging for debugging if needed
                 let log = "===== Details after Incorrect Answer: =====\n"
