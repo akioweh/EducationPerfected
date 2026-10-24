@@ -46,6 +46,33 @@ const puppeteer = require('puppeteer');
         .then(async browser => {
             const page = (await browser.pages())[0];
 
+            // ===== Hotkey setup ===== //
+            // The hotkeys are installed on EVERY new document, not just the login page.
+            // EP is a single-page app: logging in and navigating between pages replaces the
+            // whole document, and any listener added with page.evaluate() dies with it -
+            // which is why the hotkeys "did nothing" once you got to a task page.
+            // exposeFunction() + evaluateOnNewDocument() both survive navigation,
+            // so the bindings and the keyup listener are re-installed automatically.
+            await page.exposeFunction('refresh', refreshWords);
+            await page.exposeFunction('startAnswer', toggleLoop);
+            await page.exposeFunction('toggleMode', toggleAuto);
+
+            await page.evaluateOnNewDocument(() => {
+                // re-inject the listener into every new document EP loads
+                document.addEventListener("keyup", async (event) => {
+                    let key = event.key.toLowerCase();
+                    if (key !== 'alt') {
+                        if ((event.altKey && key === "r") || (key === "®")) {
+                            await window.refresh();
+                        } else if ((event.altKey && key === "s") || (key === "ß")) {
+                            await window.startAnswer();
+                        } else if ((event.altKey && key === "a") || (key === "å")) {
+                            await window.toggleMode();
+                        }
+                    }
+                });
+            });
+
             // Open EP page and log in
             console.log('Opening EP page...');
             await page.goto(DIR.login_url);
@@ -246,30 +273,38 @@ const puppeteer = require('puppeteer');
                 }
             }
 
+            // Shows a small, non-blocking toast in the page instead of window.alert().
+            // window.alert() is a *blocking* dialog: while it is open, every
+            // Input.dispatchKeyEvent from puppeteer hangs until someone clicks "OK",
+            // which freezes the answer loop (and can even stall the login typing).
+            // A DOM toast gives the same visible feedback without blocking anything.
             async function alert(msg) {
-                await page.evaluate(m => window.alert(m), msg);
+                await page.evaluate(m => {
+                    // remove any previous toast so rapid toggles don't stack up
+                    const old = document.getElementById('__ep_toast');
+                    if (old) old.remove();
+
+                    const toast = document.createElement('div');
+                    toast.id = '__ep_toast';
+                    toast.textContent = m;
+                    toast.setAttribute('style',
+                        'position:fixed;top:12px;left:50%;transform:translateX(-50%);' +
+                        'z-index:2147483647;background:#323232;color:#fff;padding:10px 18px;' +
+                        'border-radius:6px;font:14px sans-serif;box-shadow:0 2px 8px rgba(0,0,0,.4);' +
+                        'max-width:80%;text-align:center;pointer-events:none;');
+                    document.body.appendChild(toast);
+                    setTimeout(() => toast.remove(), 2500);
+                }, msg);
             }
 
-            // Expose API functions to the page (for hotkey event listeners to call)
-            await page.exposeFunction('refresh', refreshWords);
-            await page.exposeFunction('startAnswer', toggleLoop);
-            await page.exposeFunction('toggleMode', toggleAuto);
-
-            // Add event listeners for hotkeys ON the page
-            await page.evaluate(() => {
-                document.addEventListener("keyup", async (event) => {
-                    let key = event.key.toLowerCase();
-                    if (key !== 'alt') {
-                        if ((event.altKey && key === "r") || (key === "®")) {
-                            await window.refresh();
-                        } else if ((event.altKey && key === "s") || (key === "ß")) {
-                            await window.startAnswer();
-                        } else if ((event.altKey && key === "a") || (key === "å")) {
-                            await window.toggleMode();
-                        }
-                    }
-                });
-            });
             console.log('Education Perfected V2 fully Loaded.');
+        })
+        // Without this, a startup failure crashes Node with a raw unhandled-rejection
+        // stack trace. This prints a short, actionable message instead.
+        .catch(err => {
+            console.error('Education Perfected failed to start:', err && err.message ? err.message : err);
+            console.error('If this happened at the login page, EP may have changed their markup.');
+            console.error('Update DIR.username_css / DIR.password_css in index.js (see lines 13-14).');
+            process.exit(1);
         });
 })();
