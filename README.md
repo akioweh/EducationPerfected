@@ -1,8 +1,5 @@
 > [!IMPORTANT] 
-> **This project is abandoned** as I no longer use (have access to) EP.
-> However, the concept and implementation is quite simple; 
-> another interested indvidual could continue to maintain this...
-> *just that no such person has showed up yet* :(
+> **This project is abandoned**
 
 # EducationPerfected
 
